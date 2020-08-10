@@ -25,16 +25,16 @@ namespace Chess
 		};
 
 		private Dictionary<int, string> columnToLetter = new Dictionary<int, string>()
-			{
-				{0, "A"},
-				{1, "B"},
-				{2, "C"},
-				{3, "D"},
-				{4, "E"},
-				{5, "F"},
-				{6, "G"},
-				{7, "H"},
-			};
+		{
+			{0, "A"},
+			{1, "B"},
+			{2, "C"},
+			{3, "D"},
+			{4, "E"},
+			{5, "F"},
+			{6, "G"},
+			{7, "H"},
+		};
 
 		/// <summary>
 		/// Generates all possible Legal moves for a given piece
