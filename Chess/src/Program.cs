@@ -23,7 +23,7 @@ namespace Chess
 			{
 				Board.BoardIsRotated = true;
 			}
-			bool moveValid = false;
+			bool moveValid = true;
 			bool? checkmate = false;
 			MoveInformation currentMove;
 			Piece currentPiece = null;
@@ -77,8 +77,8 @@ namespace Chess
 							Console.ForegroundColor = ConsoleColor.White;
 						}
 					}
-					
-					Console.SetCursorPosition(4, 45);
+
+					/*Console.SetCursorPosition(4, 45);
 					Console.Write("Your Move: ");
 					move = Console.ReadLine();
 					if (move.GetHashCode() != "rnb".GetHashCode() && move.GetHashCode() != "flb".GetHashCode())
@@ -134,10 +134,13 @@ namespace Chess
 					for (int i = 0; i <= move.Length; i++)
 					{
 						Console.Write(" ");
-					}
+					}*/
 				} while (!moveValid);
 
-
+				Console.SetCursorPosition(14, 45);
+				string nextMove = StockfishPipe.GetNextMove();
+				Console.WriteLine(nextMove);
+				Board.pieces.Find(x => x.position.Equals(Position.NotationToPosition(nextMove.Substring(0, 2)))).Move(Position.NotationToPosition(nextMove.Substring(2, 2)));
 
 				checkmate = Checkmate();
 
@@ -154,7 +157,7 @@ namespace Chess
 						}
 					}*/
 				}
-
+				
 				if (!currentPlayerIsWhite)
 					Program.move++;
 

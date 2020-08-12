@@ -45,7 +45,7 @@ namespace Chess
 
 		public bool Equals(Position p) => this.row == p.row && this.column == p.column;
 
-		private static Position NotationToPosition(string str)
+		public static Position NotationToPosition(string str)
 		{
 			str = str.ToUpper();
 			Position position;
