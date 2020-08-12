@@ -1,3 +1,5 @@
+//Credit goes to https://www.youtube.com/user/FamTrinli
+
 #ifndef CONNECTOR_H
 #define CONNECTOR_H
 
