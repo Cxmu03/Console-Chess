@@ -1,5 +1,0 @@
-[Event "Standard Game"]
-[Site "https://github.com/Cxmu03/Chess-Client"]
-[Date "2020.08.11"]
-[White "Anonymous"]
-[Black "Anonymous"]
