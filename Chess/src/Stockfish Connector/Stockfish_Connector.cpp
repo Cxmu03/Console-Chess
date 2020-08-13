@@ -13,11 +13,26 @@ int main(int argc, char *argv[])
 
 	ofstream tempFile("temp.txt");
 
-	string s = getNextMove(argv[1]);
+	string s;
+
+	string argument;
+
+	for (int i = 1; i < argc; i++)
+	{
+		argument += argv[i];
+		argument += " ";
+	}
+
+	cout << "position startpos moves " << argument << "\ngo depth 10\n";
+
+	s = getNextMove(argument);
 
 	tempFile << s;
 
 	tempFile.close();
 
+	CloseConnection();
+
+	cin;
 	return 0;
 }

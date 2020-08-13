@@ -43,20 +43,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\Board.cs" />
-    <Compile Include="src\MoveInformation.cs" />
-    <Compile Include="src\Notator.cs" />
-    <Compile Include="src\Piece.cs" />
+    <Compile Include="src\General\Board.cs" />
+    <Compile Include="src\General\MoveInformation.cs" />
+    <Compile Include="src\General\Notator.cs" />
+    <Compile Include="src\General\Piece.cs" />
     <Compile Include="src\Pieces\Bishop.cs" />
     <Compile Include="src\Pieces\King.cs" />
     <Compile Include="src\Pieces\Knight.cs" />
     <Compile Include="src\Pieces\Pawn.cs" />
     <Compile Include="src\Pieces\Queen.cs" />
     <Compile Include="src\Pieces\Rook.cs" />
-    <Compile Include="src\Position.cs" />
-    <Compile Include="src\Program.cs" />
+    <Compile Include="src\General\Position.cs" />
+    <Compile Include="src\General\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StockfishPipe.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using Chess.Pieces;
+using System.Diagnostics;
 
 namespace Chess
 {
@@ -11,31 +9,37 @@ namespace Chess
 	{
 		public static int move = 1;
 		public static bool currentPlayerIsWhite = true;
+		public static string uciMoves = string.Empty;
 
 
 		static void Main(string[] args)
 		{
 			Random r = new Random();
 			int currentPlayer = r.Next(0, 2);
-			string firstPlayerString = currentPlayer == 0 ? "White" : "Black";
+			
 			string move;
-			if(currentPlayer == 1)
-			{
-				Board.BoardIsRotated = true;
-			}
+
+			bool engineIsWhite = false;
 			bool moveValid = true;
 			bool? checkmate = false;
+
 			MoveInformation currentMove;
 			Piece currentPiece = null;
 
 			Console.SetWindowSize(98, 47);
-			
 
+			if (currentPlayer == 1)
+			{
+				Board.BoardIsRotated = true;
+				engineIsWhite = true;
+			}
+
+			currentPlayer = 0;
 			Notator.Initialize();
 
 			Board.Initialize();
 			Console.Clear();
-			Console.Write($"    {firstPlayerString} to move\n\n");
+			Console.Write($"    White to move\n\n");
 			Board.DrawBoard();
 			//Main game loop
 			while (checkmate == false)
@@ -47,7 +51,6 @@ namespace Chess
 					currentPlayerIsWhite = currentPlayer % 2 == 0;
 					Console.SetCursorPosition(4, 0);
 					Console.WriteLine(currentPlayerIsWhite ? "White" : "Black");
-					//Console.SetCursorPosition(0, 1);
 					if (currentPlayerIsWhite)
 					{
 						if (Board.WhiteKing.InCheck())
@@ -79,61 +82,109 @@ namespace Chess
 					}
 
 					Console.SetCursorPosition(4, 45);
-					Console.Write("Your Move: ");
-					move = Console.ReadLine();
-					if (move.GetHashCode() != "rnb".GetHashCode() && move.GetHashCode() != "flb".GetHashCode())
+					 
+					if (currentPlayerIsWhite == true && engineIsWhite == true || currentPlayerIsWhite == false && engineIsWhite == false)
 					{
-						currentMove = Position.parseInputToPosition(move, currentPlayerIsWhite);
-						if (currentMove == null)
+						Console.WriteLine("Engine is thinking");
+						Process stockfish = new Process();
+						stockfish.StartInfo.FileName = "stockfish_connector.exe";
+						stockfish.StartInfo.Arguments = uciMoves == string.Empty ? "noMove" : uciMoves;
+						Debug.WriteLine($"Uci Moves: {uciMoves}");
+						stockfish.Start();
+
+						while (!File.Exists("temp.txt"))
 						{
-							moveValid = false;
+							;
 						}
-						else if (currentMove.castled)
+
+						while(IsFileLocked(new FileInfo("temp.txt")))
 						{
-							moveValid = true;
+							;
 						}
-						else
+
+						System.Threading.Thread.Sleep(100);
+
+						using (var reader = new StreamReader("temp.txt"))
 						{
-							currentPiece = Board.pieces.Find(x => x.GetType().ToString() == currentMove.pieceName && x.position.Equals(currentMove.currentPosition));
-							if (currentPiece != null && currentPiece.isWhite == currentPlayerIsWhite)
+							move = reader.ReadLine();
+						}
+
+						
+						File.Delete("temp.txt");
+						stockfish.Close();
+						Position pos1 = Position.NotationToPosition(move.Substring(0, 2));
+						Position pos2 = Position.NotationToPosition(move.Substring(2, 2));
+						Debug.WriteLine($"Move: {move}\nMoving from {pos1.row}, {pos1.column} to {pos1.row}, {pos1.column}");
+						Board.pieces.Find(x => x.position.Equals(Position.NotationToPosition(move.Substring(0, 2)))).Move(Position.NotationToPosition(move.Substring(2, 2)));
+
+						Console.SetCursorPosition(14, 45);
+
+						for (int i = 0; i <= "Engine is thinking".Length; i++)
+						{
+							Console.Write(" ");
+						}
+
+						moveValid = true;
+					}
+					else
+					{
+						Console.Write("Your Move: ");
+						move = Console.ReadLine();
+						if (move.GetHashCode() != "rnb".GetHashCode() && move.GetHashCode() != "flb".GetHashCode())
+						{
+							currentMove = Position.parseInputToPosition(move, currentPlayerIsWhite);
+							if (currentMove == null)
 							{
-								if (currentPiece.GenerateLegalMoves().Find(x => x.Equals(currentMove.desiredPosition)) != null)
+								moveValid = false;
+							}
+							else if (currentMove.castled)
+							{
+								moveValid = true;
+							}
+							else
+							{
+								currentPiece = Board.pieces.Find(x => x.GetType().ToString() == currentMove.pieceName && x.position.Equals(currentMove.currentPosition));
+								if (currentPiece != null && currentPiece.isWhite == currentPlayerIsWhite)
 								{
-									moveValid = true;
-									currentPiece.Move(currentMove.desiredPosition);
+									if (currentPiece.GenerateLegalMoves().Find(x => x.Equals(currentMove.desiredPosition)) != null)
+									{
+										moveValid = true;
+										currentPiece.Move(currentMove.desiredPosition);
+									}
 								}
 							}
 						}
-					}
-					else if(move.GetHashCode() == "rnb".GetHashCode())
-					{
-						Console.BackgroundColor = ConsoleColor.Black;
-						Console.Clear();
-						Console.Write("    xxxxx to move\n\n\n");
-						Console.SetCursorPosition(4, 0);
-						Console.WriteLine(currentPlayerIsWhite ? "White" : "Black");
-						Console.SetCursorPosition(0, 2);
-						Board.DrawBoard();
-						moveValid = false;
-					}
-					else if(move.GetHashCode() == "flb".GetHashCode())
-					{
-						Board.BoardIsRotated = Board.BoardIsRotated ? false : true;
-						Console.Clear();
-						Console.BackgroundColor = ConsoleColor.Black;
-						Console.Clear();
-						Console.Write("    xxxxx to move\n\n\n");
-						Console.SetCursorPosition(4, 0);
-						Console.WriteLine(currentPlayerIsWhite ? "White" : "Black");
-						Console.SetCursorPosition(0, 2);
-						Board.DrawBoard();
-						moveValid = false;
-					}
+						else if (move.GetHashCode() == "rnb".GetHashCode())
+						{
+							Console.BackgroundColor = ConsoleColor.Black;
+							Console.Clear();
+							Console.Write("    xxxxx to move\n\n\n");
+							Console.SetCursorPosition(4, 0);
+							Console.WriteLine(currentPlayerIsWhite ? "White" : "Black");
+							Console.SetCursorPosition(0, 2);
+							Board.DrawBoard();
+							moveValid = false;
+						}
+						else if (move.GetHashCode() == "flb".GetHashCode())
+						{
+							Board.BoardIsRotated = Board.BoardIsRotated ? false : true;
+							Console.Clear();
+							Console.BackgroundColor = ConsoleColor.Black;
+							Console.Clear();
+							Console.Write("    xxxxx to move\n\n\n");
+							Console.SetCursorPosition(4, 0);
+							Console.WriteLine(currentPlayerIsWhite ? "White" : "Black");
+							Console.SetCursorPosition(0, 2);
+							Board.DrawBoard();
+							moveValid = false;
+						}
 
-					Console.SetCursorPosition(14, 45);
-					for (int i = 0; i <= move.Length; i++)
-					{
-						Console.Write(" ");
+						Console.SetCursorPosition(14, 45);
+						for (int i = 0; i <= move.Length; i++)
+						{
+							Console.Write(" ");
+						}
+
 					}
 				} while (!moveValid);
 
@@ -146,7 +197,7 @@ namespace Chess
 
 				if (checkmate == false)
 				{
-					currentPlayer++;
+					
 					moveValid = false;
 					//Clearing the en passant status of all pawns that had it last move
 					/*foreach(Pawn p in Board.pieces.Where(x => x.GetType().ToString() == "Chess.Pieces.Pawn"))
@@ -157,7 +208,9 @@ namespace Chess
 						}
 					}*/
 				}
-				
+
+				currentPlayer++;
+
 				if (!currentPlayerIsWhite)
 					Program.move++;
 
@@ -211,7 +264,28 @@ namespace Chess
 			return false;
 		}
 
-		
+		private static bool IsFileLocked(FileInfo file)
+		{
+			try
+			{
+				using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
+				{
+					stream.Close();
+				}
+			}
+			catch (IOException)
+			{
+				//the file is unavailable because it is:
+				//still being written to
+				//or being processed by another thread
+				//or does not exist (has already been processed)
+				return true;
+			}
+
+			//file is not locked
+			return false;
+		}
+
 		/*public void checkForWindowResize()
 		{
 			while(true)

@@ -54,6 +54,8 @@ namespace Chess
 		/// <param name="pos", type=Position></param>
 		public virtual void Move(Position pos)
 		{
+			Program.uciMoves += $"{Position.PositionToNotation(this.position)}{Position.PositionToNotation(pos)} ";
+
 			string fileOutput = string.Empty;
 			string move = Program.currentPlayerIsWhite ? $"{Program.move.ToString()}. " : "";
 

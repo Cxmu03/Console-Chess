@@ -39,9 +39,10 @@ void ConnectToEngine(char* path)
 std::string getNextMove(std::string position)
 {
 	std::string str;
-	position = "position startpos moves " + position + "\ngo depth 10\n";
+	std::string move;
+	move = "position startpos moves " + position + "\ngo depth 10\n";
 
-	WriteFile(pipin_w, position.c_str(), position.length(), &writ, NULL);
+	WriteFile(pipin_w, move.c_str(), move.length(), &writ, NULL);
 	Sleep(500);
 
 	PeekNamedPipe(pipout_r, buffer, sizeof(buffer), &read, &available, NULL);
@@ -56,7 +57,7 @@ std::string getNextMove(std::string position)
 	int n = str.find("bestmove");
 	if (n != -1) return str.substr(n + 9, 4);
 
-	return "error";
+	return "Error";
 }
 
 

@@ -19,6 +19,31 @@ namespace Chess
 
 		};
 
+		private static readonly Dictionary<string, int> letterToColumn = new Dictionary<string, int>()
+		{
+			{"A", 0},
+			{"B", 1},
+			{"C", 2},
+			{"D", 3},
+			{"E", 4},
+			{"F", 5},
+			{"G", 6},
+			{"H", 7},
+		};
+
+		private static readonly Dictionary<int, string> columnToLetter = new Dictionary<int, string>()
+		{
+			{0,"a"},
+			{1,"b"},
+			{2,"c"},
+			{3,"d"},
+			{4,"e"},
+			{5,"f"},
+			{6,"g"},
+			{7,"h"},
+		};
+
+
 		public Position(int row, int column)
 		{
 			this.row = row;
@@ -45,90 +70,15 @@ namespace Chess
 
 		public bool Equals(Position p) => this.row == p.row && this.column == p.column;
 
-		public static Position NotationToPosition(string str)
-		{
-			str = str.ToUpper();
-			Position position;
+		public static Position NotationToPosition(string str) => new Position(8 - Convert.ToInt32(str.ToUpper().Substring(1, 1)), letterToColumn[str.ToUpper().Substring(0, 1)]);
 
-			Dictionary<string, int> letterToColumn = new Dictionary<string, int>()
-			{
-				{"A", 0},
-				{"B", 1},
-				{"C", 2},
-				{"D", 3},
-				{"E", 4},
-				{"F", 5},
-				{"G", 6},
-				{"H", 7},
-			};
-
-			position = new Position(8 - Convert.ToInt32(str.Substring(1, 1)), letterToColumn[str.Substring(0, 1)]);
-			return position;
-		}
+		public static string PositionToNotation(Position pos) => $"{columnToLetter[pos.column]}{8 - pos.row}";
 
 		public void ShowPosition(string prefix) => Console.WriteLine($"{prefix}{this.row}, {this.column}");
 
 
 		public static MoveInformation parseInputToPosition(string input, bool isWhite)
 		{
-			/*MoveInformation moveInformation = new MoveInformation();
-			input = input.Trim();
-			if(input.Length > 2)
-			{
-				if (input.ToUpper() == "O-O")
-				{
-					switch (isWhite)
-					{
-						case true:
-							if (Board.WhiteKing.CanCastleShort())
-							{
-								Board.WhiteKing.Castle(true);
-								moveInformation.castled = true;
-							}
-							else
-								return null;
-							break;
-						case false:
-							if (Board.BlackKing.CanCastleShort())
-							{
-								Board.BlackKing.Castle(true);
-								moveInformation.castled = true;
-							}
-							else
-								return null;
-							break;
-					}
-				}
-
-				if (input.ToUpper() == "O-O-O")
-				{
-					switch (isWhite)
-					{
-						case true:
-							if (Board.WhiteKing.CanCastleLong())
-							{
-								Board.WhiteKing.Castle(false);
-								moveInformation.castled = true;
-							}
-							else
-								return null;
-							break;
-						case false:
-							if (Board.BlackKing.CanCastleLong())
-							{
-								Board.BlackKing.Castle(false);
-								moveInformation.castled = true;
-							}
-							else
-								return null;
-							break;
-					}
-				}
-
-				//if (!new List<char>() {''})
-			}
-			return null;*/
-			
 			input = input.Trim(' ');
 			MoveInformation moveInformation = new MoveInformation();
 			if(new List<string>() {"O-O-O", "O-O"}.Contains(input.ToUpper()))
