@@ -5,6 +5,8 @@ namespace Chess.Pieces
 	class King : Piece
 	{
 		public bool hasMoved = false;
+		public static bool castlingL;
+		public static bool castlingS;
 
 		public King(bool isWhite, Position position)
 		{
@@ -89,21 +91,24 @@ namespace Chess.Pieces
 
 		public bool Castle(bool isShort)
 		{
-		
+			
 			if (isShort)
 			{
+				castlingS = true;
 				Move(new Position(this.position.row, this.position.column + 2));
 				if (isWhite)
 				{
-						Board.WhiteRookS.Move(new Position(this.position.row, this.position.column - 1));
+					Board.WhiteRookS.Move(new Position(this.position.row, this.position.column - 1));
 				}
 				else
 				{
 					Board.BlackRookS.Move(new Position(this.position.row, this.position.column - 1));
 				}
+				castlingS = false;
 			}
 			else
 			{
+				castlingL = true;
 				Move(new Position(this.position.row, this.position.column - 2));
 				if (isWhite)
 				{
@@ -113,8 +118,8 @@ namespace Chess.Pieces
 				{
 						Board.BlackRookL.Move(new Position(this.position.row, this.position.column + 1));
 				}
+				castlingL = false;
 			}
-
 			return true;
 		}
 

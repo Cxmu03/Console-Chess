@@ -131,6 +131,18 @@ namespace Chess
 
 			Console.BackgroundColor = ConsoleColor.Black;
 			Console.ForegroundColor = ConsoleColor.White;
+			
+			if(this.GetType().ToString().GetHashCode() == "Chess.Pieces.King".GetHashCode())
+			{
+				if(Pieces.King.castlingS)
+				{
+					fileOutput = "O-O";
+				}
+				else if(Pieces.King.castlingL)
+				{
+					fileOutput = "O-O-O";
+				}
+			}
 
 			if (Program.currentPlayerIsWhite)
 			{
@@ -148,6 +160,11 @@ namespace Chess
 			}
 
 			fileOutput = move + fileOutput + " ";
+
+			if (this.GetType().ToString().GetHashCode() == "Chess.Pieces.Rook".GetHashCode() && (Pieces.King.castlingL == true || Pieces.King.castlingS == true))
+			{
+				fileOutput = string.Empty;
+			}
 
 			Notator.pgnString += fileOutput;
 			if(Notator.pgnString.Length % 80 > 70 && Notator.pgnString.Length > 0)
