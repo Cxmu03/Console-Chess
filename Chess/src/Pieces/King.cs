@@ -17,7 +17,37 @@ namespace Chess.Pieces
 		public override void Move(Position pos)
 		{
 			if (!hasMoved) hasMoved = true;
+
+			if (pos.column == this.position.column + 2)
+			{
+				castlingS = true;
+				if (this.isWhite)
+				{
+					Board.WhiteRookS.Move(new Position(pos.row, pos.column - 1));
+				}
+				else
+				{
+					Board.BlackRookS.Move(new Position(pos.row, pos.column - 1));
+				}
+			}
+			else if (pos.column == this.position.column - 2)
+			{
+				castlingL = true;
+				if (this.isWhite)
+				{
+					Board.WhiteRookL.Move(new Position(pos.row, pos.column + 1));
+				}
+				else
+				{
+					Board.BlackRookL.Move(new Position(pos.row, pos.column + 1));
+				}
+			}
+
 			base.Move(pos);
+
+			castlingS = false;
+			castlingL = false;
+
 		}
 
 		/// <summary>
