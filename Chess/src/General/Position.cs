@@ -137,7 +137,7 @@ namespace Chess
 			else if (input.Length != 5)
 				return null;
 			//Promoting
-			/*else if(new char[] {'Q', 'R', 'B', 'N'}.Contains(input.ToUpper()[4]))
+			else if(new char[] {'Q', 'R', 'B', 'N'}.Contains(input.ToUpper()[4]))
 			{
 				moveInformation.pieceName = "Chess.Pieces.Pawn";
 				Pieces.Pawn.promotePiece = Convert.ToString(input.ToUpper()[4]);
@@ -150,7 +150,7 @@ namespace Chess
 				{
 					return null;
 				}
-			}*/
+			}
 			//Other Moves
 			else
 			{
