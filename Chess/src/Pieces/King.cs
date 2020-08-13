@@ -92,30 +92,26 @@ namespace Chess.Pieces
 		
 			if (isShort)
 			{
-				this.position = new Position(this.position.row, this.position.column + 2);
+				Move(new Position(this.position.row, this.position.column + 2));
 				if (isWhite)
 				{
-						Board.WhiteRookS.position = new Position(this.position.row, this.position.column - 1);
-						Board.WhiteRookS.hasMoved = true;
+						Board.WhiteRookS.Move(new Position(this.position.row, this.position.column - 1));
 				}
 				else
 				{
-						Board.BlackRookS.position = new Position(this.position.row, this.position.column - 1);
-						Board.BlackRookS.hasMoved = true;
+					Board.BlackRookS.Move(new Position(this.position.row, this.position.column - 1));
 				}
 			}
 			else
 			{
-				this.position = new Position(this.position.row, this.position.column - 2);
+				Move(new Position(this.position.row, this.position.column - 2));
 				if (isWhite)
 				{
-						Board.WhiteRookL.position = new Position(this.position.row, this.position.column + 1);
-						Board.WhiteRookL.hasMoved = true;
+						Board.WhiteRookL.Move(new Position(this.position.row, this.position.column + 1));
 				}
 				else
 				{
-						Board.BlackRookL.position = new Position(this.position.row, this.position.column + 1);
-						Board.BlackRookL.hasMoved = true;
+						Board.BlackRookL.Move(new Position(this.position.row, this.position.column + 1));
 				}
 			}
 
