@@ -174,8 +174,6 @@ namespace Chess
 			{
 				Notator.pgnString += "\n";
 			}
-
-			Notator.AppendToPgnFile(fileOutput, 0);
 		}
 
 		/// <summary>
