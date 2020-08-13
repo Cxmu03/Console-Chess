@@ -10,6 +10,7 @@ namespace Chess
 		public static int move = 1;
 		public static bool currentPlayerIsWhite = true;
 		public static string uciMoves = string.Empty;
+		public static string engineDepth = "10";
 
 
 		static void Main(string[] args)
@@ -88,7 +89,7 @@ namespace Chess
 						Console.WriteLine("Engine is thinking");
 						Process stockfish = new Process();
 						stockfish.StartInfo.FileName = "stockfish_connector.exe";
-						stockfish.StartInfo.Arguments = uciMoves == string.Empty ? "noMove" : uciMoves;
+						stockfish.StartInfo.Arguments = uciMoves == string.Empty ? $"noMove {engineDepth}" : uciMoves + $" {engineDepth}";
 						Debug.WriteLine($"Uci Moves: {uciMoves}");
 						stockfish.Start();
 

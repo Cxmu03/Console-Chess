@@ -36,11 +36,11 @@ void ConnectToEngine(char* path)
 }
 
 
-std::string getNextMove(std::string position)
+std::string getNextMove(std::string position, std::string depth)
 {
 	std::string str;
 	std::string move;
-	move = "position startpos moves " + position + "\ngo depth 10\n";
+	move = "position startpos moves " + position + "\ngo depth " + depth + "\n";
 
 	WriteFile(pipin_w, move.c_str(), move.length(), &writ, NULL);
 	Sleep(500);

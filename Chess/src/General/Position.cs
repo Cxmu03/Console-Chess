@@ -138,8 +138,15 @@ namespace Chess
 			{
 				if(operatorToPiece.ContainsKey(input.Substring(0, 1).ToUpper()))
 					moveInformation.pieceName = operatorToPiece[(input.Substring(0, 1)).ToUpper()];
-				moveInformation.currentPosition = NotationToPosition(input.Substring(1, 2));
-				moveInformation.desiredPosition = NotationToPosition(input.Substring(3, 2));
+				try
+				{
+					moveInformation.currentPosition = NotationToPosition(input.Substring(1, 2));
+					moveInformation.desiredPosition = NotationToPosition(input.Substring(3, 2));
+				}
+				catch(Exception)
+				{
+					return null;
+				}
 			}
 
 			return moveInformation;

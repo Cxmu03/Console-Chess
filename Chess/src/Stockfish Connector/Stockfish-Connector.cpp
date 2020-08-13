@@ -17,15 +17,15 @@ int main(int argc, char *argv[])
 
 	string argument;
 
-	for (int i = 1; i < argc; i++)
+	for (int i = 1; i < argc - 1; i++)
 	{
 		argument += argv[i];
 		argument += " ";
 	}
 
-	cout << "position startpos moves " << argument << "\ngo depth 10\n";
+	//cout << "position startpos moves " << argument << "\ngo depth " << argv[argc - 1]<<"\n";
 
-	s = getNextMove(argument);
+	s = getNextMove(argument, argv[argc - 1]);
 
 	tempFile << s;
 
