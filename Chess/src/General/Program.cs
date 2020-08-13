@@ -17,8 +17,9 @@ namespace Chess
 		{
 			Random r = new Random();
 			int currentPlayer = r.Next(0, 2);
-			
+
 			string move;
+			string playerName = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile).Split('\\').Last();
 
 			bool engineIsWhite = false;
 			bool moveValid = true;
@@ -33,6 +34,13 @@ namespace Chess
 			{
 				Board.BoardIsRotated = true;
 				engineIsWhite = true;
+				Notator.whitePlayer = $"Stockfish level {engineDepth}";
+				Notator.blackPlayer = playerName;
+			}
+			else
+			{
+				Notator.blackPlayer = $"Stockfish level {engineDepth}";
+				Notator.whitePlayer = playerName;
 			}
 
 			currentPlayer = 0;

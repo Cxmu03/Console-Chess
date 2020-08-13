@@ -12,6 +12,8 @@ namespace Chess
 		public static string outputFile = string.Empty;
 		public static string pgnString = string.Empty;
 		public static string outPutString = "[Result \"";
+		public static string whitePlayer = "Anonymous";
+		public static string blackPlayer = "Anonymous";
 		public static bool WhiteLongCastleRight = true;
 		public static bool WhiteShortCastleRight = true;
 		public static bool BlackCastleRigtht = true;
@@ -44,7 +46,7 @@ namespace Chess
 
 			using (StreamWriter sw = File.AppendText(outputFile))
 			{
-				string temp = $"[Event \"Standard Game\"]\n[Site \"{site}\"]\n[Date \"{date}\"]\n[White \"Anonymous\"]\n[Black \"Anonymous\"]";
+				string temp = $"[Event \"Standard Game\"]\n[Site \"{site}\"]\n[Date \"{date}\"]\n[White \"{whitePlayer}\"]\n[Black \"{blackPlayer}\"]";
 				sw.WriteLine(temp);
 			}
 		}
