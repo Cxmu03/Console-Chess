@@ -8,7 +8,7 @@ namespace Chess
 		public int row;
 		public int column;
 
-		private static readonly Dictionary<string, string> operatorToPiece = new Dictionary<string, string>()
+		public static readonly Dictionary<string, string> operatorToPiece = new Dictionary<string, string>()
 		{
 			{"K", "Chess.Pieces.King"},
 			{"Q", "Chess.Pieces.Queen"},

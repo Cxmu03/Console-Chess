@@ -144,6 +144,9 @@ namespace Chess
 				}
 			}
 
+			if(Pieces.Pawn.promoting)
+				fileOutput += $"={Pieces.Pawn.promotePiece.ToUpper()}";
+
 			if (Program.currentPlayerIsWhite)
 			{
 				if (Board.BlackKing.InCheck() && Program.Checkmate() == false)
@@ -171,6 +174,8 @@ namespace Chess
 			{
 				Notator.pgnString += "\n";
 			}
+
+			Notator.AppendToPgnFile(fileOutput, 0);
 		}
 
 		/// <summary>

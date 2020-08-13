@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 using System.Linq;
 
 namespace Chess.Pieces
@@ -7,6 +8,8 @@ namespace Chess.Pieces
 	{
 		public bool hasMoved = false;
 		public int? enPassant = null;
+		public static bool promoting = false;
+		public static string promotePiece;
 
 		public Pawn(bool isWhite, Position position)
 		{
@@ -24,7 +27,64 @@ namespace Chess.Pieces
 			}
 			else
 				enPassant = null;
-			base.Move(pos);
+
+			
+
+			if(this.isWhite ? pos.row == 0 : pos.row == 7)
+			{
+				promoting = true;
+				string piece = string.Empty;
+				do
+				{
+					Console.SetCursorPosition(4, 45);
+					Console.Write("Which Piece to promote to? (Q, R, B, N): ");
+					piece = Console.ReadLine();
+
+				} while (!(new string[] { "Q", "R", "B", "N" }.Contains(piece.ToUpper())));
+
+				promotePiece = piece;
+
+				base.Move(pos);
+
+				Board.pieces.Remove(this);
+
+				switch(piece.ToUpper())
+				{
+					case "Q":
+						Board.pieces.Add(new Queen(this.isWhite, this.position));
+						break;
+					case "R":
+						Board.pieces.Add(new Rook(this.isWhite, this.position));
+						break;
+					case "B":
+						Board.pieces.Add(new Bishop(this.isWhite, this.position));
+						break;
+					case "N":
+						Board.pieces.Add(new Knight(this.isWhite, this.position));
+						break;
+				}
+
+				if (!Board.BoardIsRotated)
+				{
+					Console.SetCursorPosition(pos.column * 11 + 9, pos.row * 5 + 4);
+					Console.BackgroundColor = pos.row % 2 == 0 ? (pos.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (pos.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
+				}
+				else
+				{
+					Console.SetCursorPosition((7 - pos.column) * 11 + 9, (7 - pos.row) * 5 + 4);
+					Console.BackgroundColor = pos.row % 2 != 0 ? (pos.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (pos.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
+				}
+				Console.ForegroundColor = this.isWhite ? ConsoleColor.White : ConsoleColor.Black;
+				Console.Write(piece.ToUpper());
+
+				Console.ResetColor();
+
+				Console.SetCursorPosition(0, 45);
+				for(int i = 0; i < 47; i++)
+				{
+					Console.Write(" ");
+				}
+			}
 		}
 
 		public override List<Position> GenerateLegalMoves()
