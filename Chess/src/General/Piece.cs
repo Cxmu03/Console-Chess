@@ -100,12 +100,12 @@ namespace Chess
 			if (!Board.BoardIsRotated)
 			{
 				Console.SetCursorPosition(this.position.column * 11 + 9, this.position.row * 5 + 4);
-				Console.BackgroundColor = pos.row % 2 == 0 ? (pos.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (pos.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
+				Console.BackgroundColor = this.position.row % 2 == 0 ? (this.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (this.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
 			}
 			else
 			{
 				Console.SetCursorPosition((7 - this.position.column) * 11 + 9, (7 - this.position.row) * 5 + 4);
-				Console.BackgroundColor = pos.row % 2 != 0 ? (pos.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (pos.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
+				Console.BackgroundColor = this.position.row % 2 != 0 ? (this.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (this.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
 			}
 			
 			//Console.BackgroundColor = this.position.row % 2 == 0 ? (this.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (this.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
