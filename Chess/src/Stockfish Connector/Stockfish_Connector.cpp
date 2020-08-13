@@ -23,8 +23,6 @@ int main(int argc, char *argv[])
 		argument += " ";
 	}
 
-	//cout << "position startpos moves " << argument << "\ngo depth " << argv[argc - 1]<<"\n";
-
 	s = getNextMove(argument, argv[argc - 1]);
 
 	tempFile << s;
@@ -33,6 +31,5 @@ int main(int argc, char *argv[])
 
 	CloseConnection();
 
-	cin;
 	return 0;
 }
