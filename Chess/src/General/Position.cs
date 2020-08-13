@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Chess
 {
@@ -81,6 +82,7 @@ namespace Chess
 		{
 			input = input.Trim(' ');
 			MoveInformation moveInformation = new MoveInformation();
+			//Castling
 			if(new List<string>() {"O-O-O", "O-O"}.Contains(input.ToUpper()))
 			{
 				if (input.ToUpper() == "O-O")
@@ -134,6 +136,22 @@ namespace Chess
 			}
 			else if (input.Length != 5)
 				return null;
+			//Promoting
+			/*else if(new char[] {'Q', 'R', 'B', 'N'}.Contains(input.ToUpper()[4]))
+			{
+				moveInformation.pieceName = "Chess.Pieces.Pawn";
+				Pieces.Pawn.promotePiece = Convert.ToString(input.ToUpper()[4]);
+				try
+				{
+					moveInformation.currentPosition = NotationToPosition(input.Substring(0, 2));
+					moveInformation.desiredPosition = NotationToPosition(input.Substring(2, 2));
+				}
+				catch (Exception)
+				{
+					return null;
+				}
+			}*/
+			//Other Moves
 			else
 			{
 				if(operatorToPiece.ContainsKey(input.Substring(0, 1).ToUpper()))

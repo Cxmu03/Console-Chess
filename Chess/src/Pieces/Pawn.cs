@@ -34,21 +34,24 @@ namespace Chess.Pieces
 			{
 				promoting = true;
 				string piece = string.Empty;
-				do
+				if (promotePiece != null)
 				{
-					Console.SetCursorPosition(4, 45);
-					Console.Write("Which Piece to promote to? (Q, R, B, N): ");
-					piece = Console.ReadLine();
+					do
+					{
+						Console.SetCursorPosition(4, 45);
+						Console.Write("Which Piece to promote to? (Q, R, B, N): ");
+						piece = Console.ReadLine();
 
-				} while (!(new string[] { "Q", "R", "B", "N" }.Contains(piece.ToUpper())));
+					} while (!(new string[] { "Q", "R", "B", "N" }.Contains(piece.ToUpper())));
 
-				promotePiece = piece;
+					promotePiece = piece;
+				}
 
 				base.Move(pos);
 
 				Board.pieces.Remove(this);
 
-				switch(piece.ToUpper())
+				switch(promotePiece.ToUpper())
 				{
 					case "Q":
 						Board.pieces.Add(new Queen(this.isWhite, this.position));
@@ -75,15 +78,21 @@ namespace Chess.Pieces
 					Console.BackgroundColor = pos.row % 2 != 0 ? (pos.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (pos.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
 				}
 				Console.ForegroundColor = this.isWhite ? ConsoleColor.White : ConsoleColor.Black;
-				Console.Write(piece.ToUpper());
+				Console.Write(promotePiece.ToUpper());
 
 				Console.ResetColor();
-
+				
 				Console.SetCursorPosition(0, 45);
 				for(int i = 0; i < 47; i++)
 				{
 					Console.Write(" ");
 				}
+
+				promotePiece = null;
+			}
+			else
+			{
+				base.Move(pos);
 			}
 		}
 
