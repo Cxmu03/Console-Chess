@@ -24,7 +24,7 @@ namespace Chess
 			bool fileExists = true;
 			string fileName = $"{DateTime.Now.ToString("yyyy-MM-dd")}";
 			string date = DateTime.Now.ToString("yyyy.MM.dd");
-			string site = "https://github.com/Cxmu03/Chess-Client";
+			string site = "https://github.com/Cxmu03/ConsoleChess";
 			utcDate = DateTime.UtcNow.ToString("yyyy.MM.dd");
 			utcTime = DateTime.UtcNow.ToString("HH.mm.ss");
 

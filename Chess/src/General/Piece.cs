@@ -108,7 +108,7 @@ namespace Chess
 				Console.BackgroundColor = this.position.row % 2 != 0 ? (this.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (this.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
 			}
 			
-			//Console.BackgroundColor = this.position.row % 2 == 0 ? (this.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (this.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
+			
 			Console.Write(" ");
 
 			this.position.row = pos.row;
@@ -154,7 +154,6 @@ namespace Chess
 			{
 				Notator.pgnString += "\n";
 			}
-			//Program.AppendToPgnFile(fileOutput);
 		}
 
 		/// <summary>

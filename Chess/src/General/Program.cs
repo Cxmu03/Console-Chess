@@ -188,11 +188,7 @@ namespace Chess
 
 					}
 				} while (!moveValid);
-
-				//Console.SetCursorPosition(14, 45);
-				//string nextMove = StockfishPipe.GetNextMove();
-				//Console.WriteLine(nextMove);
-				//Board.pieces.Find(x => x.position.Equals(Position.NotationToPosition(nextMove.Substring(0, 2)))).Move(Position.NotationToPosition(nextMove.Substring(2, 2)));
+				
 
 				checkmate = Checkmate();
 
@@ -276,28 +272,10 @@ namespace Chess
 			}
 			catch (IOException)
 			{
-				//the file is unavailable because it is:
-				//still being written to
-				//or being processed by another thread
-				//or does not exist (has already been processed)
 				return true;
 			}
-
-			//file is not locked
+			
 			return false;
 		}
-
-		/*public void checkForWindowResize()
-		{
-			while(true)
-			{
-				if(windowHeight != Console.WindowHeight || windowWidth != Console.WindowWidth)
-				{
-					BoardRoutine();
-					windowHeight = Console.WindowHeight;
-					windowWidth = Console.WindowWidth;
-				}
-			}
-		}*/
 	}
 }
