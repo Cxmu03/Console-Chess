@@ -8,6 +8,7 @@ namespace Chess
 	class Program
 	{
 		public static int move = 1;
+		public static int currentPlayer;
 		public static bool currentPlayerIsWhite = true;
 		public static string uciMoves = string.Empty;
 		public static string engineDepth = "10";
@@ -16,7 +17,7 @@ namespace Chess
 		static void Main(string[] args)
 		{
 			Random r = new Random();
-			int currentPlayer = r.Next(0, 2);
+			currentPlayer = r.Next(0, 2);
 
 			string move;
 			string playerName = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile).Split('\\').Last();
@@ -92,7 +93,7 @@ namespace Chess
 
 					Console.SetCursorPosition(4, 45);
 					 
-					if (currentPlayerIsWhite == true && engineIsWhite == true || currentPlayerIsWhite == false && engineIsWhite == false)
+					/*if (currentPlayerIsWhite == true && engineIsWhite == true || currentPlayerIsWhite == false && engineIsWhite == false)
 					{
 						Console.WriteLine("Engine is thinking");
 						Process stockfish = new Process();
@@ -138,7 +139,7 @@ namespace Chess
 						moveValid = true;
 					}
 					else
-					{
+					{*/
 						Console.Write("Your Move: ");
 						move = Console.ReadLine();
 						if (move.GetHashCode() != "dnb".GetHashCode() && move.GetHashCode() != "rtb".GetHashCode())
@@ -196,7 +197,7 @@ namespace Chess
 							Console.Write(" ");
 						}
 
-					}
+					//}
 				} while (!moveValid);
 				
 

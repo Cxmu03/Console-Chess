@@ -11,6 +11,7 @@ namespace Chess
 	/// </summary>
 	abstract class Piece
 	{
+		public int? enPassant = null;
 		public bool isWhite;
 		public Position position;
 

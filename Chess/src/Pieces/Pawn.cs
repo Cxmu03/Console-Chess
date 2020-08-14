@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System;
 using System.Linq;
+using System.Diagnostics;
 
 namespace Chess.Pieces
 {
 	class Pawn : Piece
 	{
 		public bool hasMoved = false;
-		public int? enPassant = null;
 		public static bool promoting = false;
 		public static string promotePiece;
 
@@ -21,14 +21,12 @@ namespace Chess.Pieces
 		{
 			if (!hasMoved)
 			{
-				if(pos.column == this.position.column + (this.isWhite ? -2 : 2))
-					enPassant = Program.move;
+				if(pos.row == this.position.row + (this.isWhite ? -2 : 2))
+					enPassant = Program.currentPlayer;
 				hasMoved = true;
 			}
 			else
 				enPassant = null;
-
-			
 
 			if(this.isWhite ? pos.row == 0 : pos.row == 7)
 			{
@@ -92,6 +90,23 @@ namespace Chess.Pieces
 			}
 			else
 			{
+				if(Board.pieces.Find(x => x.position.Equals(pos)) == null && pos.column != this.position.column)
+				{
+					Piece toRemove = Board.pieces.Find(x => x.position.Equals(new Position(this.position.row, pos.column)));
+					if (!Board.BoardIsRotated)
+					{
+						Console.SetCursorPosition(toRemove.position.column * 11 + 9, toRemove.position.row * 5 + 4);
+						Console.BackgroundColor = toRemove.position.row % 2 == 0 ? (toRemove.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (toRemove.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
+					}
+					else
+					{
+						Console.SetCursorPosition((7 - toRemove.position.column) * 11 + 9, (7 - toRemove.position.row) * 5 + 4);
+						Console.BackgroundColor = toRemove.position.row % 2 != 0 ? (toRemove.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (toRemove.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
+					}
+					Console.Write(" ");
+					Board.pieces.RemoveAll(x => x.position.Equals(new Position(this.position.row, pos.column)));
+
+				}
 				base.Move(pos);
 			}
 		}
@@ -147,6 +162,38 @@ namespace Chess.Pieces
 				}
 			}
 
+			//Looking at possible En Passant moves
+			for(int i = -1; i <= 1; i += 2)
+			{
+				currentPos = new Position(this.position.row, this.position.column + i);
+				//Looping through the list backwards so I can modify it in the loop without getting an error
+				for(int j = Board.pieces.Count - 1; j >= 0; j--)
+				{
+					if(Board.pieces[j].isWhite != this.isWhite && Board.pieces[j].position.Equals(currentPos))
+					{
+						if (Board.pieces[j].enPassant == Program.currentPlayer - 1)
+						{
+							Pawn p = new Pawn(Board.pieces[j].isWhite, new Position(Board.pieces[j].position.row, Board.pieces[j].position.column));
+							Board.pieces.RemoveAt(j);
+							this.position.CopyPositionFrom(currentPos);
+							switch (isWhite)
+							{
+								case true:
+									if (!Board.WhiteKing.InCheck())
+										moves.Add(new Position(this.isWhite ? defaultPos.row - 1 : defaultPos.row + 1, currentPos.column));
+									break;
+								case false:
+									if (!Board.BlackKing.InCheck())
+										moves.Add(new Position(this.isWhite ? defaultPos.row - 1 : defaultPos.row + 1, currentPos.column));
+									break;
+							}
+							this.position.CopyPositionFrom(defaultPos);
+							Board.pieces.Add(p);
+						}
+					}
+				}
+			}
+
 			return moves;
 		}
 
@@ -164,6 +211,7 @@ namespace Chess.Pieces
 					moves.Add(currentPos);
 				}
 			}
+
 
 			return moves;
 		}
