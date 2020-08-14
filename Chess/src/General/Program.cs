@@ -96,6 +96,8 @@ namespace Chess
 					{
 						Console.WriteLine("Engine is thinking");
 						Process stockfish = new Process();
+						stockfish.StartInfo.CreateNoWindow = true;
+						stockfish.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 						stockfish.StartInfo.FileName = "stockfish_connector.exe";
 						stockfish.StartInfo.Arguments = uciMoves == string.Empty ? $"noMove {engineDepth}" : uciMoves + $" {engineDepth}";
 						Debug.WriteLine($"Uci Moves: {uciMoves}");
