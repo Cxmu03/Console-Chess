@@ -93,7 +93,7 @@ namespace Chess
 
 					Console.SetCursorPosition(4, 45);
 					 
-					/*if (currentPlayerIsWhite == true && engineIsWhite == true || currentPlayerIsWhite == false && engineIsWhite == false)
+					if (currentPlayerIsWhite == true && engineIsWhite == true || currentPlayerIsWhite == false && engineIsWhite == false)
 					{
 						Console.WriteLine("Engine is thinking");
 						Process stockfish = new Process();
@@ -139,7 +139,7 @@ namespace Chess
 						moveValid = true;
 					}
 					else
-					{*/
+					{
 						Console.Write("Your Move: ");
 						move = Console.ReadLine();
 						if (move.GetHashCode() != "dnb".GetHashCode() && move.GetHashCode() != "rtb".GetHashCode())
@@ -197,7 +197,7 @@ namespace Chess
 							Console.Write(" ");
 						}
 
-					//}
+					}
 				} while (!moveValid);
 				
 
@@ -207,14 +207,6 @@ namespace Chess
 				{
 					
 					moveValid = false;
-					//Clearing the en passant status of all pawns that had it last move
-					/*foreach(Pawn p in Board.pieces.Where(x => x.GetType().ToString() == "Chess.Pieces.Pawn"))
-					{
-						if (p.enPassant != null && p.enPassant != moveCount)
-						{
-							p.enPassant = null;
-						}
-					}*/
 				}
 
 				currentPlayer++;
