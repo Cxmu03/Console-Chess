@@ -141,7 +141,7 @@ namespace Chess
 					{
 						Console.Write("Your Move: ");
 						move = Console.ReadLine();
-						if (move.GetHashCode() != "rnb".GetHashCode() && move.GetHashCode() != "flb".GetHashCode())
+						if (move.GetHashCode() != "dnb".GetHashCode() && move.GetHashCode() != "rtb".GetHashCode())
 						{
 							currentMove = Position.parseInputToPosition(move, currentPlayerIsWhite);
 							if (currentMove == null)
@@ -165,7 +165,7 @@ namespace Chess
 								}
 							}
 						}
-						else if (move.GetHashCode() == "rnb".GetHashCode())
+						else if (move.GetHashCode() == "dnb".GetHashCode())
 						{
 							Console.BackgroundColor = ConsoleColor.Black;
 							Console.Clear();
@@ -176,7 +176,7 @@ namespace Chess
 							Board.DrawBoard();
 							moveValid = false;
 						}
-						else if (move.GetHashCode() == "flb".GetHashCode())
+						else if (move.GetHashCode() == "rtb".GetHashCode())
 						{
 							Board.BoardIsRotated = Board.BoardIsRotated ? false : true;
 							Console.Clear();
