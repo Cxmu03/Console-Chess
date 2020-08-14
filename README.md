@@ -12,6 +12,10 @@ A possible move could look something like: <b>PE2E4</b>, <b>NB1C3</b> (Capitaliz
 
 The format for castling is <b>O-O</b> for a short castle and <b>O-O-O</b> for a long castle (notice that these are <b>capital o's</b> instead of zeros)
 
+## Engine
+
+This version uses [Stockfish 11](https://stockfishchess.org/download/) as it's engine. The depth is set to 10 by default as higher depths lead to longer calculating times by stockfish which causes the stockfish connector to return an empty move. Increasing the sleep duration of the stockfish connector on the other hand leads to weird behaviour by the program which is why the highest depth currently available will be 10.
+
 ## Special Commands
 
 <b>dnb</b>: Redraws the board  
