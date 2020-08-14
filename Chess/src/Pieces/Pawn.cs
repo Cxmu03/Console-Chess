@@ -105,7 +105,6 @@ namespace Chess.Pieces
 					}
 					Console.Write(" ");
 					Board.pieces.RemoveAll(x => x.position.Equals(new Position(this.position.row, pos.column)));
-
 				}
 				base.Move(pos);
 			}
