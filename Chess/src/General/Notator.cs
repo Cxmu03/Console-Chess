@@ -2,6 +2,8 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using Chess.Pieces;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -66,7 +68,7 @@ namespace Chess
 					break;
 			}
 
-			outPutString += $"[UTCDate \"{utcDate}\"]\n[UTCTime \"{utcTime}\"]\n[FEN \"{CreateFen()}\"]\n";
+			outPutString += $"[UTCDate \"{utcDate}\"]\n[UTCTime \"{utcTime}\"]\n[Start Position \"{Program.startFen}\"]\n[End Position \"{CreateFen()}\"]\n";
 
 			AppendToPgnFile(outPutString, 0);
 			AppendToPgnFile(pgnString, 1);
@@ -87,7 +89,95 @@ namespace Chess
 
 		public static string CreateFen()
 		{
-			return string.Empty;
+			string fen = string.Empty;
+			List<Piece> temp;
+			List<int> columns;
+			for(int i = 0; i < 8; i++)
+			{
+				temp = Board.pieces.Where(x => x.position.row == i).ToList();
+				columns = new List<int>();
+				foreach(Piece p in temp)
+				{
+					columns.Add(p.position.column);
+				}
+				columns.Sort();
+				if (columns.Count == 0)
+				{
+					fen += "8";
+				}
+				else
+				{
+					for (int j = 0; j < columns.Count; j++)
+					{
+						if (j == 0)
+						{
+							if (columns[j] > 0)
+							{
+								fen += columns[j];
+								string current = Board.ChooseLetter(temp.Find(x => x.position.column == columns[j]).GetType().ToString()).ToString();
+								fen += temp.Find(x => x.position.column == columns[j]).isWhite ? current : current.ToLower();
+							}
+							else
+							{
+								string current = Board.ChooseLetter(temp.Find(x => x.position.column == columns[j]).GetType().ToString()).ToString();
+								fen += temp.Find(x => x.position.column == columns[j]).isWhite ? current : current.ToLower();
+							}
+						}
+						else
+						{
+							if(columns[j] - columns[j - 1] > 1)
+							{
+								fen += (columns[j] - columns[j - 1]) - 1;
+							}
+							string current = Board.ChooseLetter(temp.Find(x => x.position.column == columns[j]).GetType().ToString()).ToString();
+							fen += temp.Find(x => x.position.column == columns[j]).isWhite ? current : current.ToLower();
+						}
+					}
+					if(columns.Last() < 7)
+					{
+						fen += 7 - columns.Last();
+					}
+				}
+				if(i < 7)
+					fen += "/";
+			}
+
+			fen += Program.currentPlayerIsWhite ? " w " : " b ";
+
+			if (!WhiteShortCastleRight && !WhiteLongCastleRight && !BlackLongCastleRigtht && !BlackShortCastleRight)
+				fen += "- ";
+			else
+			{
+				if (WhiteShortCastleRight)
+					fen += "K";
+				if (WhiteLongCastleRight)
+					fen += "Q";
+				if (BlackShortCastleRight)
+					fen += "k";
+				if (BlackLongCastleRigtht)
+					fen += "q";
+				fen += " ";
+			}
+
+			bool enPassantExists = false;
+
+			foreach(Pawn p in Board.pieces.Where(x => x.GetType().ToString().GetHashCode() == "Chess.Pieces.Pawn".GetHashCode()))
+			{
+				if(p.enPassant == Program.currentPlayer)
+				{
+					Position pos = new Position(p.position.row + (p.isWhite ? 1 : -1), p.position.column);
+					fen += $"{Position.PositionToNotation(pos)} ";
+					enPassantExists = true;
+				}
+			}
+
+			if (!enPassantExists)
+				fen += "- ";
+			
+			fen += $"{Program.halfMoves} ";
+			fen += $"{Program.move}";
+
+			return fen;
 		}
 	}
 }

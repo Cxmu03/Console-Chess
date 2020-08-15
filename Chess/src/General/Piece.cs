@@ -55,6 +55,10 @@ namespace Chess
 		/// <param name="pos", type=Position></param>
 		public virtual void Move(Position pos)
 		{
+			if(this.GetType().ToString().GetHashCode() != "Chess.Pieces.Pawn".GetHashCode())
+			{
+				Program.hasFirstCaptured = true;
+			}
 			Program.uciMoves += $"{Position.PositionToNotation(this.position)}{Position.PositionToNotation(pos)} ";
 
 			string fileOutput = string.Empty;
@@ -95,6 +99,8 @@ namespace Chess
 				Board.pieces.Remove((Piece)Board.pieces.Find(x => x.position.Equals(pos)));
 				fileOutput += "x";
 				Program.halfMoves = 0;
+				if (!Program.hasFirstCaptured)
+					Program.hasFirstCaptured = true;
 			}
 
 			fileOutput += $"{columnToLetter[pos.column]}{8 - pos.row}";

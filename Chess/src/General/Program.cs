@@ -11,8 +11,10 @@ namespace Chess
 		public static int halfMoves = 0;
 		public static int currentPlayer;
 		public static bool currentPlayerIsWhite = true;
+		public static bool hasFirstCaptured = false;
 		public static string uciMoves = string.Empty;
 		public static string engineDepth = "10";
+		public static string startFen;
 
 
 		static void Main(string[] args)
@@ -49,14 +51,22 @@ namespace Chess
 			Notator.Initialize();
 
 			Board.Initialize();
+			startFen = Notator.CreateFen();
 			Console.Clear();
 			Console.Write($"    White to move\n\n");
 			Board.DrawBoard();
 			//Main game loop
 			while (checkmate == false)
 			{
-				halfMoves++;
+				currentPlayerIsWhite = currentPlayer % 2 == 0;
+				
 				//Draw after 50 moves without capture
+				if (hasFirstCaptured)
+					halfMoves++;
+
+				if (!currentPlayerIsWhite)
+					Program.move++;
+				
 				if (halfMoves == 50)
 				{
 					checkmate = null;
@@ -65,9 +75,7 @@ namespace Chess
 				{
 					do
 					{
-
 						Console.SetWindowSize(98, 47);
-						currentPlayerIsWhite = currentPlayer % 2 == 0;
 						Console.SetCursorPosition(4, 0);
 						Console.WriteLine(currentPlayerIsWhite ? "White" : "Black");
 						if (currentPlayerIsWhite)
@@ -205,18 +213,24 @@ namespace Chess
 					//Changing the colors of the Kings back if they were in check at the start of the move
 					Console.ForegroundColor = ConsoleColor.White;
 					Console.SetCursorPosition(Board.WhiteKing.position.column * 11 + 9, Board.WhiteKing.position.row * 5 + 4);
-					if(!Board.BoardIsRotated)
+					if (!Board.BoardIsRotated)
 						Console.BackgroundColor = Board.WhiteKing.position.row % 2 == 0 ? (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
 					else
+					{
+						Console.SetCursorPosition((7 - Board.WhiteKing.position.column) * 11 + 9, (7 - Board.WhiteKing.position.row) * 5 + 4);
 						Console.BackgroundColor = Board.WhiteKing.position.row % 2 != 0 ? (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
+					}
 					Console.Write($"K");
 					Console.ResetColor();
 
 					Console.SetCursorPosition(Board.BlackKing.position.column * 11 + 9, Board.BlackKing.position.row * 5 + 4);
-					if(!Board.BoardIsRotated)
+					if (!Board.BoardIsRotated)
 						Console.BackgroundColor = Board.BlackKing.position.row % 2 == 0 ? (Board.BlackKing.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
 					else
+					{
+						Console.SetCursorPosition((7 - Board.BlackKing.position.column) * 11 + 9, (7 - Board.BlackKing.position.row) * 5 + 4);
 						Console.BackgroundColor = Board.BlackKing.position.row % 2 != 0 ? (Board.BlackKing.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (Board.BlackKing.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
+					}
 					Console.ForegroundColor = ConsoleColor.Black;
 					Console.Write($"K");
 					Console.ResetColor();
@@ -225,17 +239,24 @@ namespace Chess
 
 					if (checkmate == false)
 					{
-
 						moveValid = false;
 					}
 
-					currentPlayer++;
+					if (Board.WhiteRookS.hasMoved)
+						Notator.WhiteShortCastleRight = false;
+					if (Board.WhiteRookL.hasMoved)
+						Notator.WhiteLongCastleRight = false;
+					if (Board.BlackRookS.hasMoved)
+						Notator.BlackShortCastleRight = false;
+					if (Board.BlackRookS.hasMoved)
+						Notator.BlackLongCastleRigtht = false;
 
-					if (!currentPlayerIsWhite)
-						Program.move++;
+					currentPlayer++;
 				}
 
 			}
+
+			halfMoves++;
 
 			Console.Clear();
 

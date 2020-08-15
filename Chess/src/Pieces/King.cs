@@ -24,11 +24,13 @@ namespace Chess.Pieces
 				if (this.isWhite)
 				{
 					Notator.WhiteShortCastleRight = false;
+					Notator.WhiteLongCastleRight = false;
 					Board.WhiteRookS.Move(new Position(pos.row, pos.column - 1));
 				}
 				else
 				{
 					Notator.BlackShortCastleRight = false;
+					Notator.BlackLongCastleRigtht = false;
 					Board.BlackRookS.Move(new Position(pos.row, pos.column - 1));
 				}
 			}
@@ -38,11 +40,13 @@ namespace Chess.Pieces
 				if (this.isWhite)
 				{
 					Notator.WhiteLongCastleRight = false;
+					Notator.WhiteShortCastleRight = false;
 					Board.WhiteRookL.Move(new Position(pos.row, pos.column + 1));
 				}
 				else
 				{
 					Notator.BlackLongCastleRigtht = false;
+					Notator.BlackShortCastleRight = false;
 					Board.BlackRookL.Move(new Position(pos.row, pos.column + 1));
 				}
 			}
@@ -133,10 +137,12 @@ namespace Chess.Pieces
 				if (isWhite)
 				{
 					Notator.WhiteShortCastleRight = false;
+					Notator.WhiteLongCastleRight = false;
 					Board.WhiteRookS.Move(new Position(this.position.row, this.position.column - 1));
 				}
 				else
 				{
+					Notator.BlackLongCastleRigtht = false;
 					Board.BlackRookS.Move(new Position(this.position.row, this.position.column - 1));
 					Notator.BlackShortCastleRight = false;
 				}
@@ -148,12 +154,14 @@ namespace Chess.Pieces
 				Move(new Position(this.position.row, this.position.column - 2));
 				if (isWhite)
 				{
+					Notator.WhiteShortCastleRight = false;
 					Notator.WhiteLongCastleRight = false;
 					Board.WhiteRookL.Move(new Position(this.position.row, this.position.column + 1));
 				}
 				else
 				{
 					Notator.BlackLongCastleRigtht = false;
+					Notator.BlackShortCastleRight = true;
 					Board.BlackRookL.Move(new Position(this.position.row, this.position.column + 1));
 				}
 				castlingL = false;
