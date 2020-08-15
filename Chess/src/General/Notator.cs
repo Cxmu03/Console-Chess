@@ -16,7 +16,7 @@ namespace Chess
 		public static string blackPlayer = "Anonymous";
 		public static bool WhiteLongCastleRight = true;
 		public static bool WhiteShortCastleRight = true;
-		public static bool BlackCastleRigtht = true;
+		public static bool BlackLongCastleRigtht = true;
 		public static bool BlackShortCastleRight = true;
 		private static string utcDate;
 		private static string utcTime;

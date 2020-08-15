@@ -28,6 +28,7 @@ namespace Chess.Pieces
 			else
 				enPassant = null;
 
+			//Promoting
 			if(this.isWhite ? pos.row == 0 : pos.row == 7)
 			{
 				promoting = true;
@@ -90,6 +91,7 @@ namespace Chess.Pieces
 			}
 			else
 			{
+				//En Passant
 				if(Board.pieces.Find(x => x.position.Equals(pos)) == null && pos.column != this.position.column)
 				{
 					Piece toRemove = Board.pieces.Find(x => x.position.Equals(new Position(this.position.row, pos.column)));
@@ -105,7 +107,9 @@ namespace Chess.Pieces
 					}
 					Console.Write(" ");
 					Board.pieces.RemoveAll(x => x.position.Equals(new Position(this.position.row, pos.column)));
+					Program.halfMoves = 0;
 				}
+
 				base.Move(pos);
 			}
 		}

@@ -8,6 +8,7 @@ namespace Chess
 	class Program
 	{
 		public static int move = 1;
+		public static int halfMoves = 0;
 		public static int currentPlayer;
 		public static bool currentPlayerIsWhite = true;
 		public static string uciMoves = string.Empty;
@@ -54,165 +55,174 @@ namespace Chess
 			//Main game loop
 			while (checkmate == false)
 			{
-				do
+				halfMoves++;
+				//Draw after 50 moves without capture
+				if (halfMoves == 50)
 				{
-
-					Console.SetWindowSize(98, 47);
-					currentPlayerIsWhite = currentPlayer % 2 == 0;
-					Console.SetCursorPosition(4, 0);
-					Console.WriteLine(currentPlayerIsWhite ? "White" : "Black");
-					if (currentPlayerIsWhite)
+					checkmate = null;
+				}
+				else
+				{
+					do
 					{
-						if (Board.WhiteKing.InCheck())
+
+						Console.SetWindowSize(98, 47);
+						currentPlayerIsWhite = currentPlayer % 2 == 0;
+						Console.SetCursorPosition(4, 0);
+						Console.WriteLine(currentPlayerIsWhite ? "White" : "Black");
+						if (currentPlayerIsWhite)
 						{
-							Console.ForegroundColor = ConsoleColor.Red;
-							Console.SetCursorPosition(Board.WhiteKing.position.column * 11 + 9, Board.WhiteKing.position.row * 5 + 4);
-							Console.BackgroundColor = Board.WhiteKing.position.row % 2 == 0 ? (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
-							Console.Write(" ");
-							Console.SetCursorPosition(Board.WhiteKing.position.column * 11 + 9, Board.WhiteKing.position.row * 5 + 4);
-							Console.Write($"K");
-							Console.BackgroundColor = ConsoleColor.Black;
-							Console.ForegroundColor = ConsoleColor.White;
-						}
-
-					}
-					else
-					{
-						if (Board.BlackKing.InCheck())
-						{
-							Console.SetCursorPosition(Board.BlackKing.position.column * 11 + 9, Board.BlackKing.position.row * 5 + 4);
-							Console.BackgroundColor = Board.BlackKing.position.row % 2 == 0 ? (Board.BlackKing.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
-							Console.Write(" ");
-							Console.SetCursorPosition(Board.BlackKing.position.column * 11 + 9, Board.BlackKing.position.row * 5 + 4);
-							Console.ForegroundColor = ConsoleColor.Red;
-							Console.Write($"K");
-							Console.BackgroundColor = ConsoleColor.Black;
-							Console.ForegroundColor = ConsoleColor.White;
-						}
-					}
-
-					Console.SetCursorPosition(4, 45);
-					 
-					if (currentPlayerIsWhite == true && engineIsWhite == true || currentPlayerIsWhite == false && engineIsWhite == false)
-					{
-						Console.WriteLine("Engine is thinking");
-						Process stockfish = new Process();
-						stockfish.StartInfo.CreateNoWindow = true;
-						stockfish.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-						stockfish.StartInfo.FileName = "stockfish_connector.exe";
-						stockfish.StartInfo.Arguments = uciMoves == string.Empty ? $"noMove {engineDepth}" : uciMoves + $" {engineDepth}";
-						Debug.WriteLine($"Uci Moves: {uciMoves}");
-						stockfish.Start();
-
-						while (!File.Exists("temp.txt"))
-						{
-							;
-						}
-
-						while(IsFileLocked(new FileInfo("temp.txt")))
-						{
-							;
-						}
-
-						System.Threading.Thread.Sleep(100);
-
-						using (var reader = new StreamReader("temp.txt"))
-						{
-							move = reader.ReadLine();
-						}
-
-						
-						File.Delete("temp.txt");
-						stockfish.Close();
-						Position pos1 = Position.NotationToPosition(move.Substring(0, 2));
-						Position pos2 = Position.NotationToPosition(move.Substring(2, 2));
-						Debug.WriteLine($"Move: {move}\nMoving from {pos1.row}, {pos1.column} to {pos1.row}, {pos1.column}");
-						Board.pieces.Find(x => x.position.Equals(Position.NotationToPosition(move.Substring(0, 2)))).Move(Position.NotationToPosition(move.Substring(2, 2)));
-
-						Console.SetCursorPosition(14, 45);
-
-						for (int i = 0; i <= "Engine is thinking".Length; i++)
-						{
-							Console.Write(" ");
-						}
-
-						moveValid = true;
-					}
-					else
-					{
-						Console.Write("Your Move: ");
-						move = Console.ReadLine();
-						if (move.GetHashCode() != "dnb".GetHashCode() && move.GetHashCode() != "rtb".GetHashCode())
-						{
-							currentMove = Position.parseInputToPosition(move, currentPlayerIsWhite);
-							if (currentMove == null)
+							if (Board.WhiteKing.InCheck())
 							{
-								moveValid = false;
+								Console.ForegroundColor = ConsoleColor.Red;
+								Console.SetCursorPosition(Board.WhiteKing.position.column * 11 + 9, Board.WhiteKing.position.row * 5 + 4);
+								Console.BackgroundColor = Board.WhiteKing.position.row % 2 == 0 ? (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
+								Console.Write(" ");
+								Console.SetCursorPosition(Board.WhiteKing.position.column * 11 + 9, Board.WhiteKing.position.row * 5 + 4);
+								Console.Write($"K");
+								Console.BackgroundColor = ConsoleColor.Black;
+								Console.ForegroundColor = ConsoleColor.White;
 							}
-							else if (currentMove.castled)
+
+						}
+						else
+						{
+							if (Board.BlackKing.InCheck())
 							{
-								moveValid = true;
+								Console.SetCursorPosition(Board.BlackKing.position.column * 11 + 9, Board.BlackKing.position.row * 5 + 4);
+								Console.BackgroundColor = Board.BlackKing.position.row % 2 == 0 ? (Board.BlackKing.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
+								Console.Write(" ");
+								Console.SetCursorPosition(Board.BlackKing.position.column * 11 + 9, Board.BlackKing.position.row * 5 + 4);
+								Console.ForegroundColor = ConsoleColor.Red;
+								Console.Write($"K");
+								Console.BackgroundColor = ConsoleColor.Black;
+								Console.ForegroundColor = ConsoleColor.White;
 							}
-							else
+						}
+
+						Console.SetCursorPosition(4, 45);
+
+						if (currentPlayerIsWhite == true && engineIsWhite == true || currentPlayerIsWhite == false && engineIsWhite == false)
+						{
+							Console.WriteLine("Engine is thinking");
+							Process stockfish = new Process();
+							stockfish.StartInfo.CreateNoWindow = true;
+							stockfish.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+							stockfish.StartInfo.FileName = "stockfish_connector.exe";
+							stockfish.StartInfo.Arguments = uciMoves == string.Empty ? $"noMove {engineDepth}" : uciMoves + $" {engineDepth}";
+							Debug.WriteLine($"Uci Moves: {uciMoves}");
+							stockfish.Start();
+
+							while (!File.Exists("temp.txt"))
 							{
-								currentPiece = Board.pieces.Find(x => x.GetType().ToString() == currentMove.pieceName && x.position.Equals(currentMove.currentPosition));
-								if (currentPiece != null && currentPiece.isWhite == currentPlayerIsWhite)
+								;
+							}
+
+							while (IsFileLocked(new FileInfo("temp.txt")))
+							{
+								;
+							}
+
+							System.Threading.Thread.Sleep(100);
+
+							using (var reader = new StreamReader("temp.txt"))
+							{
+								move = reader.ReadLine();
+							}
+
+
+							File.Delete("temp.txt");
+							stockfish.Close();
+							Position pos1 = Position.NotationToPosition(move.Substring(0, 2));
+							Position pos2 = Position.NotationToPosition(move.Substring(2, 2));
+							Debug.WriteLine($"Move: {move}\nMoving from {pos1.row}, {pos1.column} to {pos1.row}, {pos1.column}");
+							Board.pieces.Find(x => x.position.Equals(Position.NotationToPosition(move.Substring(0, 2)))).Move(Position.NotationToPosition(move.Substring(2, 2)));
+
+							Console.SetCursorPosition(14, 45);
+
+							for (int i = 0; i <= "Engine is thinking".Length; i++)
+							{
+								Console.Write(" ");
+							}
+
+							moveValid = true;
+						}
+						else
+						{
+							Console.Write("Your Move: ");
+							move = Console.ReadLine();
+							if (move.GetHashCode() != "dnb".GetHashCode() && move.GetHashCode() != "rtb".GetHashCode())
+							{
+								currentMove = Position.parseInputToPosition(move, currentPlayerIsWhite);
+								if (currentMove == null)
 								{
-									if (currentPiece.GenerateLegalMoves().Find(x => x.Equals(currentMove.desiredPosition)) != null)
+									moveValid = false;
+								}
+								else if (currentMove.castled)
+								{
+									moveValid = true;
+								}
+								else
+								{
+									currentPiece = Board.pieces.Find(x => x.GetType().ToString() == currentMove.pieceName && x.position.Equals(currentMove.currentPosition));
+									if (currentPiece != null && currentPiece.isWhite == currentPlayerIsWhite)
 									{
-										moveValid = true;
-										currentPiece.Move(currentMove.desiredPosition);
+										if (currentPiece.GenerateLegalMoves().Find(x => x.Equals(currentMove.desiredPosition)) != null)
+										{
+											moveValid = true;
+											currentPiece.Move(currentMove.desiredPosition);
+										}
 									}
 								}
 							}
-						}
-						else if (move.GetHashCode() == "dnb".GetHashCode())
-						{
-							Console.BackgroundColor = ConsoleColor.Black;
-							Console.Clear();
-							Console.Write("    xxxxx to move\n\n\n");
-							Console.SetCursorPosition(4, 0);
-							Console.WriteLine(currentPlayerIsWhite ? "White" : "Black");
-							Console.SetCursorPosition(0, 2);
-							Board.DrawBoard();
-							moveValid = false;
-						}
-						else if (move.GetHashCode() == "rtb".GetHashCode())
-						{
-							Board.BoardIsRotated = Board.BoardIsRotated ? false : true;
-							Console.Clear();
-							Console.BackgroundColor = ConsoleColor.Black;
-							Console.Clear();
-							Console.Write("    xxxxx to move\n\n\n");
-							Console.SetCursorPosition(4, 0);
-							Console.WriteLine(currentPlayerIsWhite ? "White" : "Black");
-							Console.SetCursorPosition(0, 2);
-							Board.DrawBoard();
-							moveValid = false;
-						}
+							else if (move.GetHashCode() == "dnb".GetHashCode())
+							{
+								Console.BackgroundColor = ConsoleColor.Black;
+								Console.Clear();
+								Console.Write("    xxxxx to move\n\n\n");
+								Console.SetCursorPosition(4, 0);
+								Console.WriteLine(currentPlayerIsWhite ? "White" : "Black");
+								Console.SetCursorPosition(0, 2);
+								Board.DrawBoard();
+								moveValid = false;
+							}
+							else if (move.GetHashCode() == "rtb".GetHashCode())
+							{
+								Board.BoardIsRotated = Board.BoardIsRotated ? false : true;
+								Console.Clear();
+								Console.BackgroundColor = ConsoleColor.Black;
+								Console.Clear();
+								Console.Write("    xxxxx to move\n\n\n");
+								Console.SetCursorPosition(4, 0);
+								Console.WriteLine(currentPlayerIsWhite ? "White" : "Black");
+								Console.SetCursorPosition(0, 2);
+								Board.DrawBoard();
+								moveValid = false;
+							}
 
-						Console.SetCursorPosition(14, 45);
-						for (int i = 0; i <= move.Length; i++)
-						{
-							Console.Write(" ");
-						}
+							Console.SetCursorPosition(14, 45);
+							for (int i = 0; i <= move.Length; i++)
+							{
+								Console.Write(" ");
+							}
 
+						}
+					} while (!moveValid);
+
+
+					checkmate = Checkmate();
+
+					if (checkmate == false)
+					{
+
+						moveValid = false;
 					}
-				} while (!moveValid);
-				
 
-				checkmate = Checkmate();
+					currentPlayer++;
 
-				if (checkmate == false)
-				{
-					
-					moveValid = false;
+					if (!currentPlayerIsWhite)
+						Program.move++;
 				}
-
-				currentPlayer++;
-
-				if (!currentPlayerIsWhite)
-					Program.move++;
 
 			}
 

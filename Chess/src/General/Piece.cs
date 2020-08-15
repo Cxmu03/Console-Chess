@@ -94,6 +94,7 @@ namespace Chess
 				}
 				Board.pieces.Remove((Piece)Board.pieces.Find(x => x.position.Equals(pos)));
 				fileOutput += "x";
+				Program.halfMoves = 0;
 			}
 
 			fileOutput += $"{columnToLetter[pos.column]}{8 - pos.row}";
