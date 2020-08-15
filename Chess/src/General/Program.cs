@@ -77,13 +77,9 @@ namespace Chess
 								Console.ForegroundColor = ConsoleColor.Red;
 								Console.SetCursorPosition(Board.WhiteKing.position.column * 11 + 9, Board.WhiteKing.position.row * 5 + 4);
 								Console.BackgroundColor = Board.WhiteKing.position.row % 2 == 0 ? (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
-								Console.Write(" ");
-								Console.SetCursorPosition(Board.WhiteKing.position.column * 11 + 9, Board.WhiteKing.position.row * 5 + 4);
 								Console.Write($"K");
-								Console.BackgroundColor = ConsoleColor.Black;
-								Console.ForegroundColor = ConsoleColor.White;
+								Console.ResetColor();
 							}
-
 						}
 						else
 						{
@@ -91,12 +87,9 @@ namespace Chess
 							{
 								Console.SetCursorPosition(Board.BlackKing.position.column * 11 + 9, Board.BlackKing.position.row * 5 + 4);
 								Console.BackgroundColor = Board.BlackKing.position.row % 2 == 0 ? (Board.BlackKing.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
-								Console.Write(" ");
-								Console.SetCursorPosition(Board.BlackKing.position.column * 11 + 9, Board.BlackKing.position.row * 5 + 4);
 								Console.ForegroundColor = ConsoleColor.Red;
 								Console.Write($"K");
-								Console.BackgroundColor = ConsoleColor.Black;
-								Console.ForegroundColor = ConsoleColor.White;
+								Console.ResetColor();
 							}
 						}
 
@@ -209,6 +202,24 @@ namespace Chess
 						}
 					} while (!moveValid);
 
+					//Changing the colors of the Kings back if they were in check at the start of the move
+					Console.ForegroundColor = ConsoleColor.White;
+					Console.SetCursorPosition(Board.WhiteKing.position.column * 11 + 9, Board.WhiteKing.position.row * 5 + 4);
+					if(!Board.BoardIsRotated)
+						Console.BackgroundColor = Board.WhiteKing.position.row % 2 == 0 ? (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
+					else
+						Console.BackgroundColor = Board.WhiteKing.position.row % 2 != 0 ? (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
+					Console.Write($"K");
+					Console.ResetColor();
+
+					Console.SetCursorPosition(Board.BlackKing.position.column * 11 + 9, Board.BlackKing.position.row * 5 + 4);
+					if(!Board.BoardIsRotated)
+						Console.BackgroundColor = Board.BlackKing.position.row % 2 == 0 ? (Board.BlackKing.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
+					else
+						Console.BackgroundColor = Board.BlackKing.position.row % 2 != 0 ? (Board.BlackKing.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (Board.BlackKing.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
+					Console.ForegroundColor = ConsoleColor.Black;
+					Console.Write($"K");
+					Console.ResetColor();
 
 					checkmate = Checkmate();
 
