@@ -85,6 +85,11 @@ namespace Chess
 								Console.ForegroundColor = ConsoleColor.Red;
 								Console.SetCursorPosition(Board.WhiteKing.position.column * 11 + 9, Board.WhiteKing.position.row * 5 + 4);
 								Console.BackgroundColor = Board.WhiteKing.position.row % 2 == 0 ? (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
+								if(Board.BoardIsRotated)
+								{
+									Console.SetCursorPosition((7 - Board.WhiteKing.position.column) * 11 + 9, (7 - Board.WhiteKing.position.row) * 5 + 4);
+									Console.BackgroundColor = Board.WhiteKing.position.row % 2 != 0 ? (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
+								}
 								Console.Write($"K");
 								Console.ResetColor();
 							}
@@ -96,6 +101,11 @@ namespace Chess
 								Console.SetCursorPosition(Board.BlackKing.position.column * 11 + 9, Board.BlackKing.position.row * 5 + 4);
 								Console.BackgroundColor = Board.BlackKing.position.row % 2 == 0 ? (Board.BlackKing.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
 								Console.ForegroundColor = ConsoleColor.Red;
+								if (Board.BoardIsRotated)
+								{
+									Console.SetCursorPosition((7 - Board.BlackKing.position.column) * 11 + 9, (7 - Board.BlackKing.position.row) * 5 + 4);
+									Console.BackgroundColor = Board.BlackKing.position.row % 2 != 0 ? (Board.BlackKing.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
+								}
 								Console.Write($"K");
 								Console.ResetColor();
 							}
@@ -116,12 +126,12 @@ namespace Chess
 
 							while (!File.Exists("temp.txt"))
 							{
-								;
+								System.Threading.Thread.Sleep(200);
 							}
 
 							while (IsFileLocked(new FileInfo("temp.txt")))
 							{
-								;
+								System.Threading.Thread.Sleep(200);
 							}
 
 							System.Threading.Thread.Sleep(100);
