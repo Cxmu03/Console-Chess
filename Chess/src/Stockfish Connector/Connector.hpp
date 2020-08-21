@@ -43,7 +43,7 @@ std::string getNextMove(std::string position, std::string depth)
 	move = "position startpos moves " + position + "\ngo depth " + depth + "\n";
 
 	WriteFile(pipin_w, move.c_str(), move.length(), &writ, NULL);
-	Sleep(500);
+	Sleep(1500);
 
 	PeekNamedPipe(pipout_r, buffer, sizeof(buffer), &read, &available, NULL);
 	do

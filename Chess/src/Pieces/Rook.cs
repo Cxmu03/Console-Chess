@@ -12,11 +12,6 @@ namespace Chess.Pieces
 			this.position = position;
 		}
 
-		protected override void CopyPieceTo(Piece p)
-		{
-			base.CopyPieceTo(p);
-		}
-
 		public override void Move(Position pos)
 		{
 			if (!hasMoved) hasMoved = true;

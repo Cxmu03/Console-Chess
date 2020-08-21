@@ -188,7 +188,7 @@ namespace Chess
 		/// copies this piece to another piece p
 		/// </summary>
 		/// <param name="p", type=Piece></param>
-		protected virtual void CopyPieceTo(Piece p)
+		protected void CopyPieceTo(Piece p)
 		{
 			p.isWhite = this.isWhite;
 			p.position.CopyPositionFrom(this.position);
