@@ -2,6 +2,8 @@
 using System.Linq;
 using System.IO;
 using System.Diagnostics;
+using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace Chess
 {
@@ -16,9 +18,10 @@ namespace Chess
 		public static string engineDepth = "14";
 		public static string startFen;
 
-
+		[STAThread]
 		static void Main(string[] args)
 		{
+			List<string> positions = new List<string>();
 			Random r = new Random();
 			currentPlayer = r.Next(0, 2);
 
@@ -63,10 +66,9 @@ namespace Chess
 				//Draw after 50 moves without capture
 				if (hasFirstCaptured)
 					halfMoves++;
+				Debug.WriteLine(Notator.CreateFen());
 
-				if (!currentPlayerIsWhite)
-					Program.move++;
-				
+
 				if (halfMoves == 50)
 				{
 					checkmate = null;
@@ -162,7 +164,7 @@ namespace Chess
 						{
 							Console.Write("Your Move: ");
 							move = Console.ReadLine();
-							if (move.GetHashCode() != "dnb".GetHashCode() && move.GetHashCode() != "rtb".GetHashCode())
+							if (move.GetHashCode() != "dnb".GetHashCode() && move.GetHashCode() != "rtb".GetHashCode() && move.GetHashCode() != "fen".GetHashCode())
 							{
 								currentMove = Position.parseInputToPosition(move, currentPlayerIsWhite);
 								if (currentMove == null)
@@ -185,6 +187,10 @@ namespace Chess
 										}
 									}
 								}
+							}
+							else if(move.GetHashCode() == "fen".GetHashCode())
+							{
+								Clipboard.SetText(Notator.CreateFen());
 							}
 							else if (move.GetHashCode() == "dnb".GetHashCode())
 							{
@@ -261,7 +267,11 @@ namespace Chess
 					if (Board.BlackRookS.hasMoved)
 						Notator.BlackLongCastleRigtht = false;
 
+
+					if (!currentPlayerIsWhite)
+						Program.move++;
 					currentPlayer++;
+
 				}
 
 			}

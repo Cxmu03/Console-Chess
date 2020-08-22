@@ -163,7 +163,7 @@ namespace Chess
 
 			foreach(Pawn p in Board.pieces.Where(x => x.GetType().ToString().GetHashCode() == "Chess.Pieces.Pawn".GetHashCode()))
 			{
-				if(p.enPassant == Program.currentPlayer)
+				if(p.enPassant == Program.currentPlayer - 1)
 				{
 					Position pos = new Position(p.position.row + (p.isWhite ? 1 : -1), p.position.column);
 					fen += $"{Position.PositionToNotation(pos)} ";
