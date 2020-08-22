@@ -19,7 +19,7 @@ This version uses [Stockfish 11](https://stockfishchess.org/download/) as it's e
 ## Special Commands
 
 <b>dnb</b>: Redraws the board  
-<b>rtb</b>: Rotates the board 180°
+<b>rtb</b>: Rotates the board 180°     
 <b>fen</b>: Creates an fen of the current position and copies it to the clipboard
 
 ## Known Bugs
