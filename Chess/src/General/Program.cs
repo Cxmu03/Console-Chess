@@ -22,14 +22,17 @@ namespace Chess
 		static void Main(string[] args)
 		{
 			List<string> positions = new List<string>();
+			List<string> declinedDraws = new List<string>();
 			Random r = new Random();
 			currentPlayer = r.Next(0, 2);
 
 			string move;
 			string playerName = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile).Split('\\').Last();
+			string drawReason = string.Empty;
 
 			bool engineIsWhite = false;
 			bool moveValid = true;
+			bool drawClaimMade = false;
 			bool? checkmate = false;
 
 			MoveInformation currentMove;
@@ -62,12 +65,85 @@ namespace Chess
 			while (checkmate == false)
 			{
 				currentPlayerIsWhite = currentPlayer % 2 == 0;
-				
+
+				Console.SetWindowSize(98, 47);
+				Console.SetCursorPosition(4, 0);
+				Console.WriteLine(currentPlayerIsWhite ? "White" : "Black");
+
 				//Draw after 50 moves without capture
 				if (hasFirstCaptured)
 					halfMoves++;
-				Debug.WriteLine(Notator.CreateFen());
+				//Debug.WriteLine(Notator.CreateFen());
+				string currentFen = Notator.CreateFen();
+				var currentFenArr = currentFen.Split(' ');
+				Debug.WriteLine($"Adding {string.Join(" ", currentFenArr.Where((item, index) => index < currentFenArr.Length - 2).ToArray())}");
+				if(currentPlayer > 0)
+					positions.Add(string.Join(" ", currentFenArr.Where((item, index) => index < currentFenArr.Length - 2).ToArray()));
 
+				var query = positions.GroupBy(x => x)
+									 .ToDictionary(x => x.Key, y => y.Count());
+				
+				if(query.ContainsValue(5))
+				{
+					checkmate = null;
+					drawReason = "Fivefold Repetition";
+					goto loopEnding;
+				}
+
+				if(query.ContainsValue(3))
+				{
+					bool DrawOffer = false;
+					Debug.WriteLine(declinedDraws.Count);
+					foreach(KeyValuePair<string, int> kv in query.Where(x => x.Value == 3))
+					{
+						if(!declinedDraws.Contains(kv.Key))
+						{
+							DrawOffer = true;
+						}
+						
+					}
+
+					//Stockfish cant agree to draws
+					if(currentPlayerIsWhite == engineIsWhite)
+					{
+						DrawOffer = false;
+						foreach (KeyValuePair<string, int> kv in query)
+						{
+							if (kv.Value == 3 && !declinedDraws.Contains(kv.Key))
+							{
+								declinedDraws.Add(kv.Key);
+							}
+						}
+					}
+
+					if (DrawOffer)
+					{
+						Console.SetCursorPosition(4, 45);
+						Console.Write("Do you want to claim a draw? y/n: ");
+						if (Console.ReadLine() == "y")
+						{
+							checkmate = null;
+							drawReason = "Threefold Repetition";
+							goto loopEnding;
+						}
+						else
+						{
+							foreach (KeyValuePair<string, int> kv in query)
+							{
+								if (kv.Value == 3 && !declinedDraws.Contains(kv.Key))
+								{
+									declinedDraws.Add(kv.Key);
+								}
+							}
+
+							Console.SetCursorPosition(4, 45);
+							for (int i = 0; i < 40; i++)
+							{
+								Console.Write(" ");
+							}
+						}
+					}
+				}
 
 				if (halfMoves == 50)
 				{
@@ -115,7 +191,7 @@ namespace Chess
 
 						Console.SetCursorPosition(4, 45);
 
-						if (currentPlayerIsWhite == true && engineIsWhite == true || currentPlayerIsWhite == false && engineIsWhite == false)
+						if (currentPlayerIsWhite == engineIsWhite)
 						{
 							Console.WriteLine("Engine is thinking");
 							Process stockfish = new Process();
@@ -271,8 +347,8 @@ namespace Chess
 					if (!currentPlayerIsWhite)
 						Program.move++;
 					currentPlayer++;
-
 				}
+			loopEnding:;
 
 			}
 
@@ -297,7 +373,9 @@ namespace Chess
 			}
 			else if (checkmate == null)
 			{
-				Console.WriteLine("Draw by stalemate");
+				if (drawReason == string.Empty)
+					drawReason = "Stalemate";
+				Console.WriteLine($"Draw by {drawReason}");
 			}
 			Notator.FinishNotation(result);
 
