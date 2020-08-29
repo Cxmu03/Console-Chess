@@ -15,16 +15,16 @@ namespace Chess
 		public static bool currentPlayerIsWhite = true;
 		public static bool hasFirstCaptured = false;
 		public static string uciMoves = string.Empty;
-		public static string engineDepth = " ";
+		public static string engineDepth = "14";
 		public static string startFen;
 		
+		[STAThread]
 		static void Main(string[] args)
 		{
 			AppDomain.CurrentDomain.ProcessExit += new EventHandler(CurrentDomain_ProcessExit);
 			Game();
 		}
 		
-		[STAThread]
 		public static void Game()
 		{
 			List<string> positions = new List<string>();
