@@ -20,7 +20,7 @@ This version uses [Stockfish 11](https://stockfishchess.org/download/) as it's e
 
 <b>dnb</b>: Redraws the board  
 <b>rtb</b>: Rotates the board 180°     
-<b>fen</b>: Creates an fen of the current position and copies it to the clipboard
+<b>fen</b>: Creates an fen of the current position and copies it to the clipboard      
 <b>ext</b>: Exits the current game and returns to the main menu   
 
 ## Known Bugs
