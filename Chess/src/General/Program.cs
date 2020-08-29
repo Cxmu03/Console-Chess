@@ -15,11 +15,17 @@ namespace Chess
 		public static bool currentPlayerIsWhite = true;
 		public static bool hasFirstCaptured = false;
 		public static string uciMoves = string.Empty;
-		public static string engineDepth = "14";
+		public static string engineDepth = " ";
 		public static string startFen;
-
-		[STAThread]
+		
 		static void Main(string[] args)
+		{
+			AppDomain.CurrentDomain.ProcessExit += new EventHandler(CurrentDomain_ProcessExit);
+			Game();
+		}
+		
+		[STAThread]
+		public static void Game()
 		{
 			List<string> positions = new List<string>();
 			List<string> declinedDraws = new List<string>();
@@ -32,7 +38,6 @@ namespace Chess
 
 			bool engineIsWhite = false;
 			bool moveValid = true;
-			bool drawClaimMade = false;
 			bool? checkmate = false;
 
 			MoveInformation currentMove;
@@ -77,34 +82,34 @@ namespace Chess
 				string currentFen = Notator.CreateFen();
 				var currentFenArr = currentFen.Split(' ');
 				Debug.WriteLine($"Adding {string.Join(" ", currentFenArr.Where((item, index) => index < currentFenArr.Length - 2).ToArray())}");
-				if(currentPlayer > 0)
+				if (currentPlayer > 0)
 					positions.Add(string.Join(" ", currentFenArr.Where((item, index) => index < currentFenArr.Length - 2).ToArray()));
 
 				var query = positions.GroupBy(x => x)
 									 .ToDictionary(x => x.Key, y => y.Count());
-				
-				if(query.ContainsValue(5))
+
+				if (query.ContainsValue(5))
 				{
 					checkmate = null;
 					drawReason = "Fivefold Repetition";
 					goto loopEnding;
 				}
 
-				if(query.ContainsValue(3))
+				if (query.ContainsValue(3))
 				{
 					bool DrawOffer = false;
 					Debug.WriteLine(declinedDraws.Count);
-					foreach(KeyValuePair<string, int> kv in query.Where(x => x.Value == 3))
+					foreach (KeyValuePair<string, int> kv in query.Where(x => x.Value == 3))
 					{
-						if(!declinedDraws.Contains(kv.Key))
+						if (!declinedDraws.Contains(kv.Key))
 						{
 							DrawOffer = true;
 						}
-						
+
 					}
 
 					//Stockfish cant agree to draws
-					if(currentPlayerIsWhite == engineIsWhite)
+					if (currentPlayerIsWhite == engineIsWhite)
 					{
 						DrawOffer = false;
 						foreach (KeyValuePair<string, int> kv in query)
@@ -163,7 +168,7 @@ namespace Chess
 								Console.ForegroundColor = ConsoleColor.Red;
 								Console.SetCursorPosition(Board.WhiteKing.position.column * 11 + 9, Board.WhiteKing.position.row * 5 + 4);
 								Console.BackgroundColor = Board.WhiteKing.position.row % 2 == 0 ? (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
-								if(Board.BoardIsRotated)
+								if (Board.BoardIsRotated)
 								{
 									Console.SetCursorPosition((7 - Board.WhiteKing.position.column) * 11 + 9, (7 - Board.WhiteKing.position.row) * 5 + 4);
 									Console.BackgroundColor = Board.WhiteKing.position.row % 2 != 0 ? (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.Gray : ConsoleColor.DarkGray) : (Board.WhiteKing.position.column % 2 == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray);
@@ -240,6 +245,60 @@ namespace Chess
 						{
 							Console.Write("Your Move: ");
 							move = Console.ReadLine();
+							switch(move)
+							{
+								case "dnb":
+									Console.BackgroundColor = ConsoleColor.Black;
+									Console.Clear();
+									Console.Write("    xxxxx to move\n\n\n");
+									Console.SetCursorPosition(4, 0);
+									Console.WriteLine(currentPlayerIsWhite ? "White" : "Black");
+									Console.SetCursorPosition(0, 2);
+									Board.DrawBoard();
+									moveValid = false;
+									break;
+								case "rtb":
+									Board.BoardIsRotated = Board.BoardIsRotated ? false : true;
+									Console.Clear();
+									Console.BackgroundColor = ConsoleColor.Black;
+									Console.Clear();
+									Console.Write("    xxxxx to move\n\n\n");
+									Console.SetCursorPosition(4, 0);
+									Console.WriteLine(currentPlayerIsWhite ? "White" : "Black");
+									Console.SetCursorPosition(0, 2);
+									Board.DrawBoard();
+									moveValid = false;
+									break;
+								case "fen":
+									Clipboard.SetText(Notator.CreateFen());
+									break;
+								case "ext":
+									Menu.MainMenu();
+									break;
+								default:
+									currentMove = Position.parseInputToPosition(move, currentPlayerIsWhite);
+									if (currentMove == null)
+									{
+										moveValid = false;
+									}
+									else if (currentMove.castled)
+									{
+										moveValid = true;
+									}
+									else
+									{
+										currentPiece = Board.pieces.Find(x => x.GetType().ToString() == currentMove.pieceName && x.position.Equals(currentMove.currentPosition));
+										if (currentPiece != null && currentPiece.isWhite == currentPlayerIsWhite)
+										{
+											if (currentPiece.GenerateLegalMoves().Find(x => x.Equals(currentMove.desiredPosition)) != null)
+											{
+												moveValid = true;
+												currentPiece.Move(currentMove.desiredPosition);
+											}
+										}
+									}
+									break;
+							}
 							if (move.GetHashCode() != "dnb".GetHashCode() && move.GetHashCode() != "rtb".GetHashCode() && move.GetHashCode() != "fen".GetHashCode())
 							{
 								currentMove = Position.parseInputToPosition(move, currentPlayerIsWhite);
@@ -264,7 +323,7 @@ namespace Chess
 									}
 								}
 							}
-							else if(move.GetHashCode() == "fen".GetHashCode())
+							else if (move.GetHashCode() == "fen".GetHashCode())
 							{
 								Clipboard.SetText(Notator.CreateFen());
 							}
@@ -292,7 +351,7 @@ namespace Chess
 								Board.DrawBoard();
 								moveValid = false;
 							}
-
+							
 							Console.SetCursorPosition(14, 45);
 							for (int i = 0; i <= move.Length; i++)
 							{
@@ -419,6 +478,15 @@ namespace Chess
 			}
 			
 			return false;
+		}
+
+		private static void CurrentDomain_ProcessExit(object sender, EventArgs e)
+		{
+			//still existing temp.txt can cause access problems on next run
+			if(File.Exists("temp.txt"))
+			{
+				File.Delete("temp.txt");
+			}
 		}
 	}
 }

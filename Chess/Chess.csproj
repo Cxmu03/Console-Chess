@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\General\Board.cs" />
+    <Compile Include="src\General\Menu.cs" />
     <Compile Include="src\General\MoveInformation.cs" />
     <Compile Include="src\General\Notator.cs" />
     <Compile Include="src\General\Piece.cs" />
