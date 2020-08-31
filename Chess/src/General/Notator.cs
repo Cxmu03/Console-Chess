@@ -20,6 +20,7 @@ namespace Chess
 		public static bool WhiteShortCastleRight = true;
 		public static bool BlackLongCastleRigtht = true;
 		public static bool BlackShortCastleRight = true;
+		public static bool pgnSaving = true;
 		private static string utcDate;
 		private static string utcTime;
 

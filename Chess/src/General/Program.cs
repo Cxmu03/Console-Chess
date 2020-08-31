@@ -4,6 +4,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Media;
 
 namespace Chess
 {
@@ -17,12 +18,13 @@ namespace Chess
 		public static string uciMoves = string.Empty;
 		public static string engineDepth = "14";
 		public static string startFen;
+		private static SoundPlayer moveSoundPlayer = new SoundPlayer(Properties.Resources.Move);
 		
 		[STAThread]
 		static void Main(string[] args)
 		{
 			AppDomain.CurrentDomain.ProcessExit += new EventHandler(CurrentDomain_ProcessExit);
-			Game();
+			Menu.MainMenu();
 		}
 		
 		public static void Game()
@@ -59,7 +61,8 @@ namespace Chess
 			}
 
 			currentPlayer = 0;
-			Notator.Initialize();
+			if(Notator.pgnSaving)
+				Notator.Initialize();
 
 			Board.Initialize();
 			startFen = Notator.CreateFen();
@@ -231,7 +234,7 @@ namespace Chess
 							Position pos2 = Position.NotationToPosition(move.Substring(2, 2));
 							Debug.WriteLine($"Move: {move}\nMoving from {pos1.row}, {pos1.column} to {pos1.row}, {pos1.column}");
 							Board.pieces.Find(x => x.position.Equals(Position.NotationToPosition(move.Substring(0, 2)))).Move(Position.NotationToPosition(move.Substring(2, 2)));
-
+							moveSoundPlayer.PlaySync();
 							Console.SetCursorPosition(14, 45);
 
 							for (int i = 0; i <= "Engine is thinking".Length; i++)
@@ -294,62 +297,11 @@ namespace Chess
 											{
 												moveValid = true;
 												currentPiece.Move(currentMove.desiredPosition);
+												moveSoundPlayer.PlaySync();
 											}
 										}
 									}
 									break;
-							}
-							if (move.GetHashCode() != "dnb".GetHashCode() && move.GetHashCode() != "rtb".GetHashCode() && move.GetHashCode() != "fen".GetHashCode())
-							{
-								currentMove = Position.parseInputToPosition(move, currentPlayerIsWhite);
-								if (currentMove == null)
-								{
-									moveValid = false;
-								}
-								else if (currentMove.castled)
-								{
-									moveValid = true;
-								}
-								else
-								{
-									currentPiece = Board.pieces.Find(x => x.GetType().ToString() == currentMove.pieceName && x.position.Equals(currentMove.currentPosition));
-									if (currentPiece != null && currentPiece.isWhite == currentPlayerIsWhite)
-									{
-										if (currentPiece.GenerateLegalMoves().Find(x => x.Equals(currentMove.desiredPosition)) != null)
-										{
-											moveValid = true;
-											currentPiece.Move(currentMove.desiredPosition);
-										}
-									}
-								}
-							}
-							else if (move.GetHashCode() == "fen".GetHashCode())
-							{
-								Clipboard.SetText(Notator.CreateFen());
-							}
-							else if (move.GetHashCode() == "dnb".GetHashCode())
-							{
-								Console.BackgroundColor = ConsoleColor.Black;
-								Console.Clear();
-								Console.Write("    xxxxx to move\n\n\n");
-								Console.SetCursorPosition(4, 0);
-								Console.WriteLine(currentPlayerIsWhite ? "White" : "Black");
-								Console.SetCursorPosition(0, 2);
-								Board.DrawBoard();
-								moveValid = false;
-							}
-							else if (move.GetHashCode() == "rtb".GetHashCode())
-							{
-								Board.BoardIsRotated = Board.BoardIsRotated ? false : true;
-								Console.Clear();
-								Console.BackgroundColor = ConsoleColor.Black;
-								Console.Clear();
-								Console.Write("    xxxxx to move\n\n\n");
-								Console.SetCursorPosition(4, 0);
-								Console.WriteLine(currentPlayerIsWhite ? "White" : "Black");
-								Console.SetCursorPosition(0, 2);
-								Board.DrawBoard();
-								moveValid = false;
 							}
 							
 							Console.SetCursorPosition(14, 45);
@@ -436,7 +388,8 @@ namespace Chess
 					drawReason = "Stalemate";
 				Console.WriteLine($"Draw by {drawReason}");
 			}
-			Notator.FinishNotation(result);
+			if(Notator.pgnSaving)
+				Notator.FinishNotation(result);
 
 			Console.ReadKey();
 		}
