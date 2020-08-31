@@ -42,6 +42,7 @@ namespace Chess
 			List<Action> commands = new List<Action>()
 			{
 				StockfishDepth,
+				PgnSaving,
 				MainMenu,
 			};
 			DisplayHeader("Settings");
