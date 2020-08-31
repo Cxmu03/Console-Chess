@@ -22,7 +22,7 @@ namespace Chess
 			{
 				Program.Game,
 				Settings,
-				(() => Environment.Exit(0))
+				() => Environment.Exit(0)
 			};
 			DisplayHeader("Console Chess");
 			DisplayOptions(options, commands, "Console Chess".Length, "Choice: ");
@@ -64,16 +64,16 @@ namespace Chess
 				Console.SetCursorPosition(Console.WindowWidth / 2 - headerString.Length / 2, 26);
 			}
 			Program.engineDepth = prompt;
-			MainMenu();
+			Settings();
 		}
 
 		private static void PgnSaving()
 		{
 			string headerString = "Pgn saving";
 			DisplayHeader(headerString);
-			Console.SetCursorPosition(Console.WindowWidth / 2 - headerString.Length / 2, 8);
-			Console.Write($"Pgn saving is currently turned {0}", Notator.pgnSaving ? "on" : "off");
-			Console.SetCursorPosition(Console.WindowWidth / 2 - headerString.Length / 2, 9);
+			Console.SetCursorPosition(Console.WindowWidth / 2 - (int)(headerString.Length * 1.5), 8);
+			Console.Write("Pgn saving is currently turned {0}", Notator.pgnSaving ? "on" : "off");
+			Console.SetCursorPosition(Console.WindowWidth / 2 - (int)(headerString.Length * 1.5), 9);
 			Console.Write("Do you want to turn pgn saving on(1) or off(2): ");
 			string prompt = "15";
 			while (!Enumerable.Range(1, 2).Contains(Convert.ToInt32(prompt)))
@@ -88,7 +88,7 @@ namespace Chess
 				Notator.pgnSaving = true;
 			else
 				Notator.pgnSaving = false;
-			MainMenu();
+			Settings();
 		}
 
 		private static void DisplayHeader(string s)
