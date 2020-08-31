@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
+using System.Collections;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,6 +10,8 @@ namespace Chess
 {
 	class Menu
 	{
+		delegate void s(string d);
+
 		public static void MainMenu()
 		{
 			List<string> options = new List<string>()
@@ -16,14 +20,82 @@ namespace Chess
 				"Settings",
 				"Quit"
 			};
-			Console.Clear();
-			DisplayHeader("Main Menu");
-			DisplayOptions(options);
+			List<Action> commands = new List<Action>()
+			{
+				Program.Game,
+				Settings,
+				(() => Environment.Exit(0))
+			};
+			DisplayHeader("Console Chess");
+			DisplayOptions(options, commands, "Console Chess".Length, "Choice: ");
 			Console.ReadKey();
+		}
+
+		public static void Settings()
+		{
+			List<string> options = new List<string>()
+			{
+				"Stockfish Depth",
+				"Pgn saving",
+				"Go Back"
+			};
+			List<Action> commands = new List<Action>()
+			{
+				StockfishDepth,
+				MainMenu,
+			};
+			DisplayHeader("Settings");
+			DisplayOptions(options, commands, "Settings".Length, "Choice");
+		}
+
+		private static void StockfishDepth()
+		{
+			string headerString = "Stockfish Depth";
+			DisplayHeader(headerString);
+			Console.SetCursorPosition(Console.WindowWidth / 2 - headerString.Length / 2, 8);
+			Console.Write($"Current stockfish depth is {Program.engineDepth}");
+			Console.SetCursorPosition(Console.WindowWidth / 2 - headerString.Length / 2, 9);
+			Console.Write("Enter new depth: ");
+			string prompt = "15";
+			while(!Enumerable.Range(1, 14).Contains(Convert.ToInt32(prompt)))
+			{
+				prompt = Console.ReadLine();
+				Console.SetCursorPosition(Console.WindowWidth / 2 - headerString.Length / 2, 26);
+				for (int i = 0; i < prompt.Length; i++)
+					Console.Write(" ");
+				Console.SetCursorPosition(Console.WindowWidth / 2 - headerString.Length / 2, 26);
+			}
+			Program.engineDepth = prompt;
+			MainMenu();
+		}
+
+		private static void PgnSaving()
+		{
+			string headerString = "Pgn saving";
+			DisplayHeader(headerString);
+			Console.SetCursorPosition(Console.WindowWidth / 2 - headerString.Length / 2, 8);
+			Console.Write($"Pgn saving is currently turned {0}", Notator.pgnSaving ? "on" : "off");
+			Console.SetCursorPosition(Console.WindowWidth / 2 - headerString.Length / 2, 9);
+			Console.Write("Do you want to turn pgn saving on(1) of off(2): ");
+			string prompt = "15";
+			while (!Enumerable.Range(1, 2).Contains(Convert.ToInt32(prompt)))
+			{
+				prompt = Console.ReadLine();
+				Console.SetCursorPosition(Console.WindowWidth / 2 - headerString.Length / 2, 26);
+				for (int i = 0; i < prompt.Length; i++)
+					Console.Write(" ");
+				Console.SetCursorPosition(Console.WindowWidth / 2 - headerString.Length / 2, 26);
+			}
+			if (Convert.ToInt32(prompt) == 1)
+				Notator.pgnSaving = true;
+			else
+				Notator.pgnSaving = false;
+			MainMenu();
 		}
 
 		private static void DisplayHeader(string s)
 		{
+			Console.Clear();
 			Console.SetCursorPosition(1, 0);
 			for(int i = 2; i <= Console.WindowWidth - 1; i++)
 			{
@@ -77,11 +149,39 @@ namespace Chess
 			}
 		}
 
-		private static void DisplayOptions(List<string> options)
+		private static void DisplayOptions(List<string> options, List<Action> commands, int headerStringLength, string prompt)
 		{
+			int top = 8;
 			for(int i = 0; i < options.Count; i++)
 			{
-				;
+				Console.SetCursorPosition(Console.WindowWidth / 2 - headerStringLength / 2, top);
+				Console.Write($"{i + 1}: {options[i]}");
+				top += 2;
+			}
+			Console.SetCursorPosition(Console.WindowWidth / 2 - headerStringLength / 2, top);
+			bool cont = true;
+			Console.Write(prompt);
+			while (cont)
+			{
+				string choice = Console.ReadLine();
+				try
+				{
+					int choiceInt = Convert.ToInt32(choice);
+					if(choiceInt > 0 && choiceInt <= options.Count)
+					{
+						commands[choiceInt - 1].DynamicInvoke();
+					}
+				}
+				catch (Exception)
+				{
+					cont = false;
+					Console.SetCursorPosition(Console.WindowWidth / 2 - headerStringLength / 2, top);
+					for (int i = 0; i < choice.Length; i++)
+					{
+						Console.Write(" ");
+					}
+					Console.SetCursorPosition(Console.WindowWidth / 2 - headerStringLength / 2, top);
+				}
 			}
 		}
 	}
