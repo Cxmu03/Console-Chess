@@ -10,8 +10,6 @@ namespace Chess
 {
 	class Menu
 	{
-		delegate void s(string d);
-
 		public static void MainMenu()
 		{
 			List<string> options = new List<string>()
@@ -28,7 +26,6 @@ namespace Chess
 			};
 			DisplayHeader("Console Chess");
 			DisplayOptions(options, commands, "Console Chess".Length, "Choice: ");
-			Console.ReadKey();
 		}
 
 		public static void Settings()
@@ -77,7 +74,7 @@ namespace Chess
 			Console.SetCursorPosition(Console.WindowWidth / 2 - headerString.Length / 2, 8);
 			Console.Write($"Pgn saving is currently turned {0}", Notator.pgnSaving ? "on" : "off");
 			Console.SetCursorPosition(Console.WindowWidth / 2 - headerString.Length / 2, 9);
-			Console.Write("Do you want to turn pgn saving on(1) of off(2): ");
+			Console.Write("Do you want to turn pgn saving on(1) or off(2): ");
 			string prompt = "15";
 			while (!Enumerable.Range(1, 2).Contains(Convert.ToInt32(prompt)))
 			{
