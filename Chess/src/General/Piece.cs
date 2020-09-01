@@ -59,7 +59,8 @@ namespace Chess
 			{
 				Program.hasFirstCaptured = true;
 			}
-			Program.uciMoves += $"{Position.PositionToNotation(this.position)}{Position.PositionToNotation(pos)} ";
+			if (!(this.GetType().ToString().GetHashCode() == "Chess.Pieces.Rook".GetHashCode() && (Pieces.King.castlingL == true || Pieces.King.castlingS == true)))
+				Program.uciMoves += $"{Position.PositionToNotation(this.position)}{Position.PositionToNotation(pos)} ";
 
 			string fileOutput = string.Empty;
 			string move = Program.currentPlayerIsWhite ? $"{Program.move.ToString()}. " : "";
