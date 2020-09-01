@@ -29,6 +29,8 @@ namespace Chess
 		
 		public static void Game()
 		{
+			if (File.Exists("temp.txt"))
+				File.Delete("temp.txt");
 			List<string> positions = new List<string>();
 			List<string> declinedDraws = new List<string>();
 			Random r = new Random();

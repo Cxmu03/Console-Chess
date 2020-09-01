@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Diagnostics;
 using System.Text;
 using System.IO;
 
@@ -59,8 +60,13 @@ namespace Chess
 			{
 				Program.hasFirstCaptured = true;
 			}
-			if (!(this.GetType().ToString().GetHashCode() == "Chess.Pieces.Rook".GetHashCode() && (Pieces.King.castlingL == true || Pieces.King.castlingS == true)))
+
+			if (!(this.GetType().ToString().GetHashCode() == "Chess.Pieces.Rook".GetHashCode() && (Pieces.King.castlingL || Pieces.King.castlingS)))
+			{
 				Program.uciMoves += $"{Position.PositionToNotation(this.position)}{Position.PositionToNotation(pos)} ";
+				Debug.WriteLine(Pieces.King.castlingL || Pieces.King.castlingS);
+				Debug.WriteLine($"------------Adding to uci moves: {Position.PositionToNotation(this.position)}{Position.PositionToNotation(pos)}-------------");
+			}
 
 			string fileOutput = string.Empty;
 			string move = Program.currentPlayerIsWhite ? $"{Program.move.ToString()}. " : "";

@@ -18,9 +18,9 @@ namespace Chess.Pieces
 		{
 			if (!hasMoved) hasMoved = true;
 
-			if (pos.column == this.position.column + 2)
+			if (pos.column == this.position.column + 2 && !castlingS)
 			{
-				castlingS = true;
+				/*castlingS = true;
 				if (this.isWhite)
 				{
 					Notator.WhiteShortCastleRight = false;
@@ -32,11 +32,12 @@ namespace Chess.Pieces
 					Notator.BlackShortCastleRight = false;
 					Notator.BlackLongCastleRigtht = false;
 					Board.BlackRookS.Move(new Position(pos.row, pos.column - 1));
-				}
+				}*/
+				Castle(true);
 			}
-			else if (pos.column == this.position.column - 2)
+			else if (pos.column == this.position.column - 2 && !castlingL)
 			{
-				castlingL = true;
+				/*castlingL = true;
 				if (this.isWhite)
 				{
 					Notator.WhiteLongCastleRight = false;
@@ -48,7 +49,8 @@ namespace Chess.Pieces
 					Notator.BlackLongCastleRigtht = false;
 					Notator.BlackShortCastleRight = false;
 					Board.BlackRookL.Move(new Position(pos.row, pos.column + 1));
-				}
+				}*/
+				Castle(false);
 			}
 
 			base.Move(pos);
@@ -133,37 +135,38 @@ namespace Chess.Pieces
 			if (isShort)
 			{
 				castlingS = true;
-				Move(new Position(this.position.row, this.position.column + 2));
 				if (isWhite)
 				{
 					Notator.WhiteShortCastleRight = false;
 					Notator.WhiteLongCastleRight = false;
-					Board.WhiteRookS.Move(new Position(this.position.row, this.position.column - 1));
+					Board.WhiteRookS.Move(new Position(this.position.row, this.position.column + 1));
 				}
 				else
 				{
 					Notator.BlackLongCastleRigtht = false;
-					Board.BlackRookS.Move(new Position(this.position.row, this.position.column - 1));
+					Board.BlackRookS.Move(new Position(this.position.row, this.position.column + 1));
 					Notator.BlackShortCastleRight = false;
 				}
+				Move(new Position(this.position.row, this.position.column + 2));
 				castlingS = false;
 			}
 			else
 			{
 				castlingL = true;
-				Move(new Position(this.position.row, this.position.column - 2));
 				if (isWhite)
 				{
 					Notator.WhiteShortCastleRight = false;
 					Notator.WhiteLongCastleRight = false;
-					Board.WhiteRookL.Move(new Position(this.position.row, this.position.column + 1));
+					Board.WhiteRookL.Move(new Position(this.position.row, this.position.column - 1));
 				}
 				else
 				{
 					Notator.BlackLongCastleRigtht = false;
 					Notator.BlackShortCastleRight = true;
-					Board.BlackRookL.Move(new Position(this.position.row, this.position.column + 1));
+					Board.BlackRookL.Move(new Position(this.position.row, this.position.column - 1));
 				}
+
+				Move(new Position(this.position.row, this.position.column - 2));
 				castlingL = false;
 			}
 			return true;
