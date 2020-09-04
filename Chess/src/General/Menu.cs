@@ -54,8 +54,8 @@ namespace Chess
 			Console.Write($"Current stockfish depth is {Program.engineDepth}");
 			Console.SetCursorPosition(Console.WindowWidth / 2 - headerString.Length / 2, 9);
 			Console.Write("Enter new depth: ");
-			string prompt = "15";
-			while(!Enumerable.Range(1, 14).Contains(Convert.ToInt32(prompt)))
+			string prompt = "16";
+			while(!Enumerable.Range(1, 15).Contains(Convert.ToInt32(prompt)))
 			{
 				prompt = Console.ReadLine();
 				Console.SetCursorPosition(Console.WindowWidth / 2 - headerString.Length / 2, 26);

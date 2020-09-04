@@ -16,7 +16,7 @@ namespace Chess
 		public static bool currentPlayerIsWhite = true;
 		public static bool hasFirstCaptured = false;
 		public static string uciMoves = string.Empty;
-		public static string engineDepth = "14";
+		public static string engineDepth = "15";
 		public static string startFen;
 		private static SoundPlayer moveSoundPlayer = new SoundPlayer(Properties.Resources.Move);
 		

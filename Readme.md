@@ -14,7 +14,7 @@ The format for castling is <b>O-O</b> for a short castle and <b>O-O-O</b> for a 
 
 ## Engine
 
-This version uses [Stockfish 11](https://stockfishchess.org/download/) as it's engine. The depth is currently set to 14 by default as depth 15 leads to weird behaviour by Stockfish.   
+This version uses the fastest version of [Stockfish 12](https://stockfishchess.org/download/) as it's engine (may not be compatible with older cpu's). The depth is set to 15 by default.   
 
 ## Special Commands
 
