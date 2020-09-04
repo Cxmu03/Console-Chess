@@ -196,3 +196,8 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
+
+*.ide
+*.ide-shm
+*.ide-wal
+*.lock
