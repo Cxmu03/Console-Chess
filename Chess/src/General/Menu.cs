@@ -43,7 +43,7 @@ namespace Chess
 				MainMenu,
 			};
 			DisplayHeader("Settings");
-			DisplayOptions(options, commands, "Settings".Length, "Choice");
+			DisplayOptions(options, commands, "Settings".Length, "Choice: ");
 		}
 
 		private static void StockfishDepth()
