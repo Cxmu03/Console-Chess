@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Media;
+using System.Configuration;
 
 namespace Chess
 {
@@ -15,8 +16,9 @@ namespace Chess
 		public static int currentPlayer;
 		public static bool currentPlayerIsWhite = true;
 		public static bool hasFirstCaptured = false;
+		public static bool playSound;
 		public static string uciMoves = string.Empty;
-		public static string engineDepth = "14";
+		public static string engineDepth;
 		public static string startFen;
 		private static SoundPlayer moveSoundPlayer = new SoundPlayer(Properties.Resources.Move);
 		
@@ -24,6 +26,7 @@ namespace Chess
 		static void Main(string[] args)
 		{
 			AppDomain.CurrentDomain.ProcessExit += new EventHandler(CurrentDomain_ProcessExit);
+			initializeVars();
 			Menu.MainMenu();
 		}
 		
@@ -236,7 +239,8 @@ namespace Chess
 							Position pos2 = Position.NotationToPosition(move.Substring(2, 2));
 							Debug.WriteLine($"Move: {move}\nMoving from {pos1.row}, {pos1.column} to {pos1.row}, {pos1.column}");
 							Board.pieces.Find(x => x.position.Equals(Position.NotationToPosition(move.Substring(0, 2)))).Move(Position.NotationToPosition(move.Substring(2, 2)));
-							moveSoundPlayer.PlaySync();
+							if(playSound)
+								moveSoundPlayer.PlaySync();
 							Console.SetCursorPosition(14, 45);
 
 							for (int i = 0; i <= "Engine is thinking".Length; i++)
@@ -299,7 +303,8 @@ namespace Chess
 											{
 												moveValid = true;
 												currentPiece.Move(currentMove.desiredPosition);
-												moveSoundPlayer.PlaySync();
+												if(playSound)
+													moveSoundPlayer.PlaySync();
 											}
 										}
 									}
@@ -416,6 +421,13 @@ namespace Chess
 						return null;
 
 			return false;
+		}
+
+		private static void initializeVars()
+		{
+			engineDepth = ConfigurationManager.AppSettings.Get("StockfishDepth");
+			playSound = ConfigurationManager.AppSettings.Get("playSound") == "true" ? true : false;
+			Notator.pgnSaving = ConfigurationManager.AppSettings.Get("savePgn") == "true" ? true : false;
 		}
 
 		private static bool IsFileLocked(FileInfo file)

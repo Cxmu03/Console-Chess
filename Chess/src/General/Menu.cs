@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
-using System.Collections;
-using System.Text;
-using System.Threading.Tasks;
+using System.Configuration;
 
 namespace Chess
 {
 	class Menu
 	{
+		
+
 		public static void MainMenu()
 		{
 			List<string> options = new List<string>()
@@ -34,12 +33,14 @@ namespace Chess
 			{
 				"Stockfish Depth",
 				"Pgn saving",
+				"Sound",
 				"Go Back"
 			};
 			List<Action> commands = new List<Action>()
 			{
 				StockfishDepth,
 				PgnSaving,
+				Sound,
 				MainMenu,
 			};
 			DisplayHeader("Settings");
@@ -48,6 +49,7 @@ namespace Chess
 
 		private static void StockfishDepth()
 		{
+			ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 			string headerString = "Stockfish Depth";
 			DisplayHeader(headerString);
 			Console.SetCursorPosition(Console.WindowWidth / 2 - headerString.Length / 2, 8);
@@ -64,11 +66,14 @@ namespace Chess
 				Console.SetCursorPosition(Console.WindowWidth / 2 - headerString.Length / 2, 26);
 			}
 			Program.engineDepth = prompt;
-			Settings();
+			ConfigurationManager.AppSettings.Set("StockfishDepth", prompt);
+			ConfigurationManager.RefreshSection("appSettings");
+			Settings(); 
 		}
 
 		private static void PgnSaving()
 		{
+			ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 			string headerString = "Pgn saving";
 			DisplayHeader(headerString);
 			Console.SetCursorPosition(Console.WindowWidth / 2 - (int)(headerString.Length * 1.5), 8);
@@ -85,9 +90,50 @@ namespace Chess
 				Console.SetCursorPosition(Console.WindowWidth / 2 - headerString.Length / 2, 26);
 			}
 			if (Convert.ToInt32(prompt) == 1)
+			{
 				Notator.pgnSaving = true;
+				ConfigurationManager.AppSettings.Set("savePgn", "true");
+				ConfigurationManager.RefreshSection("appSettings");
+			}
 			else
+			{
 				Notator.pgnSaving = false;
+				ConfigurationManager.AppSettings.Set("savePgn", "false");
+				ConfigurationManager.RefreshSection("appSettings");
+			}
+			Settings();
+		}
+
+		private static void Sound()
+		{
+			ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+			string headerString = "Sound";
+			DisplayHeader(headerString);
+			Console.SetCursorPosition(Console.WindowWidth / 2 - (int)(headerString.Length * 1.5), 8);
+			Console.Write("Sound is currently turned {0}", Program.playSound ? "on" : "off");
+			Console.SetCursorPosition(Console.WindowWidth / 2 - (int)(headerString.Length * 1.5), 9);
+			Console.Write("Do you want to turn sound on(1) or off(2): ");
+			string prompt = "15";
+			while (!Enumerable.Range(1, 2).Contains(Convert.ToInt32(prompt)))
+			{
+				prompt = Console.ReadLine();
+				Console.SetCursorPosition(Console.WindowWidth / 2 - headerString.Length / 2, 26);
+				for (int i = 0; i < prompt.Length; i++)
+					Console.Write(" ");
+				Console.SetCursorPosition(Console.WindowWidth / 2 - headerString.Length / 2, 26);
+			}
+			if (Convert.ToInt32(prompt) == 1)
+			{
+				ConfigurationManager.AppSettings.Set("playSound", "true");
+				ConfigurationManager.RefreshSection("appSettings");
+				Program.playSound = true;
+			}
+			else
+			{
+				ConfigurationManager.AppSettings.Set("playSound", "false");
+				ConfigurationManager.RefreshSection("appSettings");
+				Program.playSound = false;
+			}
 			Settings();
 		}
 
