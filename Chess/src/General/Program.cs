@@ -86,7 +86,6 @@ namespace Chess
 				//Draw after 50 moves without capture
 				if (hasFirstCaptured)
 					halfMoves++;
-				//Debug.WriteLine(Notator.CreateFen());
 				string currentFen = Notator.CreateFen();
 				var currentFenArr = currentFen.Split(' ');
 				Debug.WriteLine($"Adding {string.Join(" ", currentFenArr.Where((item, index) => index < currentFenArr.Length - 2).ToArray())}");

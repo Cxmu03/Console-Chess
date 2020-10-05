@@ -20,36 +20,10 @@ namespace Chess.Pieces
 
 			if (pos.column == this.position.column + 2 && !castlingS)
 			{
-				/*castlingS = true;
-				if (this.isWhite)
-				{
-					Notator.WhiteShortCastleRight = false;
-					Notator.WhiteLongCastleRight = false;
-					Board.WhiteRookS.Move(new Position(pos.row, pos.column - 1));
-				}
-				else
-				{
-					Notator.BlackShortCastleRight = false;
-					Notator.BlackLongCastleRigtht = false;
-					Board.BlackRookS.Move(new Position(pos.row, pos.column - 1));
-				}*/
 				Castle(true);
 			}
 			else if (pos.column == this.position.column - 2 && !castlingL)
 			{
-				/*castlingL = true;
-				if (this.isWhite)
-				{
-					Notator.WhiteLongCastleRight = false;
-					Notator.WhiteShortCastleRight = false;
-					Board.WhiteRookL.Move(new Position(pos.row, pos.column + 1));
-				}
-				else
-				{
-					Notator.BlackLongCastleRigtht = false;
-					Notator.BlackShortCastleRight = false;
-					Board.BlackRookL.Move(new Position(pos.row, pos.column + 1));
-				}*/
 				Castle(false);
 			}
 

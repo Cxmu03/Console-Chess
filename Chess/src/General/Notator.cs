@@ -3,9 +3,6 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using Chess.Pieces;
-using System.Diagnostics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Chess
 {
@@ -20,7 +17,7 @@ namespace Chess
 		public static bool WhiteShortCastleRight = true;
 		public static bool BlackLongCastleRigtht = true;
 		public static bool BlackShortCastleRight = true;
-		public static bool pgnSaving = true;
+		public static bool pgnSaving;
 		private static string utcDate;
 		private static string utcTime;
 
@@ -77,7 +74,6 @@ namespace Chess
 
 		public static void AppendToPgnFile(string str, int numBlankLines)
 		{
-
 			using (StreamWriter sw = File.AppendText(outputFile))
 			{
 				for (int i = 0; i < numBlankLines; i++)
