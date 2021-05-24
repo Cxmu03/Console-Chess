@@ -34,11 +34,11 @@ namespace Chess
 
 			while (fileExists)
 			{
-				if (!File.Exists($"{fileName} Game {counter}.txt"))
+				if (!File.Exists($"Logs/{fileName} Game {counter}.txt"))
 				{
 					fileExists = false;
-					File.Create($"{fileName} Game {counter}.txt").Dispose();
-					outputFile = $"{fileName} Game {counter}.txt";
+					File.Create($"Logs/{fileName} Game {counter}.txt").Dispose();
+					outputFile = $"Logs/{fileName} Game {counter}.txt";
 				}
 				else
 					counter++;
