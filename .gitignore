@@ -16,7 +16,6 @@
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
-[Bb]uild[Ll]og.*
 
 #NUNIT
 *.VisualState.xml
@@ -178,7 +177,6 @@ FakesAssemblies/
 *.txt
 
 [Oo]bj
-[Rr]elease
 
 ### Windows ###
 # Windows image file caches
