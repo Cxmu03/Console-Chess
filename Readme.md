@@ -1,5 +1,7 @@
 # Console-Chess
 
+(Beware of <u>horrible</u> code)
+
 This project is just a little challenge that I set for myself and is a proof of concept more than anything else as is really inconvenient to use and serves no real purpose.
 
 ## Player Input
